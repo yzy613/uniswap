@@ -1,0 +1,67 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: User API
+    version: 0.0.1
+paths:
+    /v1/user:
+        post:
+            tags:
+                - User
+            operationId: User_CreateUser
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.user.v1.CreateUserRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.user.v1.CreateUserReply'
+    /v1/user/{id}:
+        get:
+            tags:
+                - User
+            operationId: User_GetUser
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.user.v1.GetUserReply'
+components:
+    schemas:
+        api.user.v1.CreateUserReply:
+            type: object
+            properties:
+                id:
+                    type: string
+        api.user.v1.CreateUserRequest:
+            type: object
+            properties:
+                settingJson:
+                    type: string
+        api.user.v1.GetUserReply:
+            type: object
+            properties:
+                settingJson:
+                    type: string
+                createdAt:
+                    type: string
+                updatedAt:
+                    type: string
+tags:
+    - name: User
