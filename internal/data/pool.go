@@ -60,6 +60,11 @@ func (r *poolRepo) CreatePool(token0, token1 string,
 
 	result, err := dao.Pool.Ctx(ctx).
 		Data(pool).OmitEmptyData().
+		OnConflict(
+			dao.Pool.Columns().Token0Address,
+			dao.Pool.Columns().Token1Address,
+			dao.Pool.Columns().Fee,
+		).
 		Save()
 	if err != nil {
 		return nil, err
@@ -94,4 +99,89 @@ func (r *poolRepo) FeeAmountTickSpacing(fee uint32) (tickSpacing int32) {
 	}
 
 	return int32(feeAmount.TickSpacing)
+}
+
+func (r *poolRepo) GetPosition(poolId int64, owner string, tickLower, tickUpper int32) (*biz.Position, error) {
+	ctx := context.TODO()
+	var position *entity.Position
+
+	err := dao.Position.Ctx(ctx).
+		Where(g.Map{
+			dao.Position.Columns().PoolId:       poolId,
+			dao.Position.Columns().OwnerAddress: owner,
+			dao.Position.Columns().TickLower:    tickLower,
+			dao.Position.Columns().TickUpper:    tickUpper,
+		}).
+		Scan(&position)
+	if err != nil {
+		return nil, err
+	}
+	if position == nil {
+		return nil, nil
+	}
+
+	return &biz.Position{Position: *position}, nil
+}
+
+func (r *poolRepo) UpdatePosition(position biz.Position,
+	liquidityDelta, feeGrowthInside0X128, feeGrowthInside1X128 decimal.Decimal,
+) error {
+	ctx := context.TODO()
+	data := entity.Position{
+		Liquidity:                position.Liquidity.Add(liquidityDelta),
+		FeeGrowthInside0LastX128: feeGrowthInside0X128,
+		FeeGrowthInside1LastX128: feeGrowthInside1X128,
+	}
+
+	_, err := dao.Position.Ctx(ctx).
+		Data(data).OmitEmptyData().
+		Where(g.Map{
+			dao.Position.Columns().PoolId:       position.PoolId,
+			dao.Position.Columns().OwnerAddress: position.OwnerAddress,
+			dao.Position.Columns().TickLower:    position.TickLower,
+			dao.Position.Columns().TickUpper:    position.TickUpper,
+		}).
+		Update()
+
+	return err
+}
+
+func (r *poolRepo) GetSlot0(poolId int64) (*biz.Slot0, error) {
+	ctx := context.TODO()
+	var slot0 *entity.Slot0
+
+	err := dao.Slot0.Ctx(ctx).
+		Where(dao.Slot0.Columns().PoolId, poolId).
+		Scan(&slot0)
+	if err != nil {
+		return nil, err
+	}
+	if slot0 == nil {
+		return nil, nil
+	}
+
+	return &biz.Slot0{Slot0: *slot0}, nil
+}
+
+func (r *poolRepo) SaveSlot0(slot0 biz.Slot0) error {
+	ctx := context.TODO()
+
+	_, err := dao.Slot0.Ctx(ctx).
+		Data(slot0.Slot0).OmitEmptyData().
+		OnConflict(dao.Slot0.Columns().PoolId).
+		Save()
+
+	return err
+}
+
+func (r *poolRepo) GetFeeGrowthGlobal(poolId int64,
+) (feeGrowthGlobal0X128, feeGrowthGlobal1X128 decimal.Decimal, err error) {
+	ctx := context.TODO()
+	var feeGrowthGlobal *entity.FeeGrowthGlobal
+
+	err = dao.FeeGrowthGlobal.Ctx(ctx).
+		Where(dao.FeeGrowthGlobal.Columns().PoolId, poolId).
+		Scan(&feeGrowthGlobal)
+
+	return feeGrowthGlobal.FeeGrowthGlobal0X128, feeGrowthGlobal.FeeGrowthGlobal1X128, err
 }
