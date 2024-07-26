@@ -9,6 +9,7 @@ require (
 	github.com/gogf/gf/contrib/drivers/mysql/v2 v2.7.2
 	github.com/gogf/gf/v2 v2.7.2
 	github.com/google/wire v0.6.0
+	github.com/shopspring/decimal v1.4.0
 	go.uber.org/automaxprocs v1.5.3
 	google.golang.org/genproto/googleapis/api v0.0.0-20240722135656-d784300faade
 	google.golang.org/grpc v1.65.0
