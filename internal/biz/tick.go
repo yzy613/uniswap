@@ -66,3 +66,36 @@ func (uc *TickUsecase) Update(poolId int64, tick, tickCurrent int32,
 
 	return
 }
+
+func (uc *TickUsecase) GetFeeGrowthInside(poolId int64,
+	tickLower, tickUpper, tickCurrent int32, feeGrowthGlobal0X128, feeGrowthGlobal1X128 decimal.Decimal,
+) (feeGrowthInside0X128, feeGrowthInside1X128 decimal.Decimal, err error) {
+	lower, err := uc.repo.Get(poolId, tickLower)
+	if err != nil {
+		return decimal.Decimal{}, decimal.Decimal{}, err
+	}
+	upper, err := uc.repo.Get(poolId, tickUpper)
+	if err != nil {
+		return decimal.Decimal{}, decimal.Decimal{}, err
+	}
+
+	var feeGrowthBelow0X128, feeGrowthBelow1X128 decimal.Decimal
+
+	if tickCurrent >= tickLower {
+		feeGrowthBelow0X128 = lower.FeeGrowthOutside0X128
+		feeGrowthBelow1X128 = lower.FeeGrowthOutside1X128
+	} else {
+		feeGrowthBelow0X128 = feeGrowthGlobal0X128.Sub(lower.FeeGrowthOutside0X128)
+		feeGrowthBelow1X128 = feeGrowthGlobal1X128.Sub(lower.FeeGrowthOutside1X128)
+	}
+
+	var feeGrowthAbove0X128, feeGrowthAbove1X128 decimal.Decimal
+
+	if tickCurrent < tickUpper {
+		feeGrowthAbove0X128 = upper.FeeGrowthOutside0X128
+		feeGrowthAbove1X128 = upper.FeeGrowthOutside1X128
+	} else {
+		feeGrowthAbove0X128 = feeGrowthGlobal0X128.Sub(upper.FeeGrowthOutside0X128)
+		feeGrowthAbove1X128 = feeGrowthGlobal1X128.Sub(upper.FeeGrowthOutside1X128)
+	}
+}

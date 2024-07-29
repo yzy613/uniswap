@@ -11,6 +11,7 @@ import (
 )
 
 const (
+	// TODO: 精度问题
 	MinTick = -887272
 	MaxTick = -MinTick
 )
@@ -47,6 +48,7 @@ type PoolUsecase struct {
 
 	tickUsecase *TickUsecase
 	observation *ObservationUsecase
+	tickBitmap  *TickBitmapUsecase
 }
 
 func NewPoolUsecase(repo PoolRepo, logger log.Logger, tickUsecase *TickUsecase) *PoolUsecase {
@@ -106,6 +108,7 @@ func (uc *PoolUsecase) CreatePool(token0, token1 string, fee uint32) (*Pool, err
 	return uc.repo.CreatePool(token0, token1, fee, tickSpacing, uc.tickSpacingToMaxLiquidityPerTick(tickSpacing))
 }
 
+// TODO: 用这个来测试精度
 func (uc *PoolUsecase) tickSpacingToMaxLiquidityPerTick(tickSpacing int32) decimal.Decimal {
 	minTick := MinTick / tickSpacing * tickSpacing
 	maxTick := MaxTick / tickSpacing * tickSpacing
@@ -177,10 +180,19 @@ func (uc *PoolUsecase) updatePosition(pool Pool, owner string, tickLower, tickUp
 		}
 
 		if flippedLower {
-
+			err = uc.tickBitmap.FlipTick(pool.Id, tickLower, int32(pool.TickSpacing))
+			if err != nil {
+				return nil, err
+			}
 		}
 		if flippedUpper {
-			
+			err = uc.tickBitmap.FlipTick(pool.Id, tickUpper, int32(pool.TickSpacing))
+			if err != nil {
+				return nil, err
+			}
 		}
+
+		feeGrowthInside0X128, feeGrowthInside1X128 :=
+			uc.tickUsecase.
 	}
 }
