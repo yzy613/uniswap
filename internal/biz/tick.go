@@ -26,7 +26,7 @@ func NewTickUsecase(repo TickRepo, logger log.Logger) *TickUsecase {
 }
 
 func (uc *TickUsecase) Update(poolId int64, tick, tickCurrent int32,
-	liquidityDelta, feeGrowthGlobal0X128, feeGrowthGlobal1X128, secondsPerLiquidityCumulativeX128 decimal.Decimal,
+	liquidityDelta, feeGrowthGlobal0, feeGrowthGlobal1, secondsPerLiquidityCumulative decimal.Decimal,
 	tickCumulative int64, time uint32, upper bool, maxLiquidity decimal.Decimal,
 ) (flipped bool, err error) {
 	info, err := uc.repo.Get(poolId, tick)
@@ -45,9 +45,9 @@ func (uc *TickUsecase) Update(poolId int64, tick, tickCurrent int32,
 
 	if liquidityGrossBefore.IsZero() {
 		if tick <= tickCurrent {
-			info.FeeGrowthOutside0X128 = feeGrowthGlobal0X128
-			info.FeeGrowthOutside1X128 = feeGrowthGlobal1X128
-			info.SecondsPerLiquidityOutsideX128 = secondsPerLiquidityCumulativeX128
+			info.FeeGrowthOutside0 = feeGrowthGlobal0
+			info.FeeGrowthOutside1 = feeGrowthGlobal1
+			info.SecondsPerLiquidityOutside = secondsPerLiquidityCumulative
 			info.TickCumulativeOutside = decimal.NewFromInt(tickCumulative)
 			info.SecondsOutside = decimal.NewFromInt(int64(time))
 		}
@@ -68,8 +68,8 @@ func (uc *TickUsecase) Update(poolId int64, tick, tickCurrent int32,
 }
 
 func (uc *TickUsecase) GetFeeGrowthInside(poolId int64,
-	tickLower, tickUpper, tickCurrent int32, feeGrowthGlobal0X128, feeGrowthGlobal1X128 decimal.Decimal,
-) (feeGrowthInside0X128, feeGrowthInside1X128 decimal.Decimal, err error) {
+	tickLower, tickUpper, tickCurrent int32, feeGrowthGlobal0, feeGrowthGlobal1 decimal.Decimal,
+) (feeGrowthInside0, feeGrowthInside1 decimal.Decimal, err error) {
 	lower, err := uc.repo.Get(poolId, tickLower)
 	if err != nil {
 		return decimal.Decimal{}, decimal.Decimal{}, err
@@ -79,23 +79,23 @@ func (uc *TickUsecase) GetFeeGrowthInside(poolId int64,
 		return decimal.Decimal{}, decimal.Decimal{}, err
 	}
 
-	var feeGrowthBelow0X128, feeGrowthBelow1X128 decimal.Decimal
+	var feeGrowthBelow0, feeGrowthBelow1 decimal.Decimal
 
 	if tickCurrent >= tickLower {
-		feeGrowthBelow0X128 = lower.FeeGrowthOutside0X128
-		feeGrowthBelow1X128 = lower.FeeGrowthOutside1X128
+		feeGrowthBelow0 = lower.FeeGrowthOutside0
+		feeGrowthBelow1 = lower.FeeGrowthOutside1
 	} else {
-		feeGrowthBelow0X128 = feeGrowthGlobal0X128.Sub(lower.FeeGrowthOutside0X128)
-		feeGrowthBelow1X128 = feeGrowthGlobal1X128.Sub(lower.FeeGrowthOutside1X128)
+		feeGrowthBelow0 = feeGrowthGlobal0.Sub(lower.FeeGrowthOutside0)
+		feeGrowthBelow1 = feeGrowthGlobal1.Sub(lower.FeeGrowthOutside1)
 	}
 
-	var feeGrowthAbove0X128, feeGrowthAbove1X128 decimal.Decimal
+	var feeGrowthAbove0, feeGrowthAbove1 decimal.Decimal
 
 	if tickCurrent < tickUpper {
-		feeGrowthAbove0X128 = upper.FeeGrowthOutside0X128
-		feeGrowthAbove1X128 = upper.FeeGrowthOutside1X128
+		feeGrowthAbove0 = upper.FeeGrowthOutside0
+		feeGrowthAbove1 = upper.FeeGrowthOutside1
 	} else {
-		feeGrowthAbove0X128 = feeGrowthGlobal0X128.Sub(upper.FeeGrowthOutside0X128)
-		feeGrowthAbove1X128 = feeGrowthGlobal1X128.Sub(upper.FeeGrowthOutside1X128)
+		feeGrowthAbove0 = feeGrowthGlobal0.Sub(upper.FeeGrowthOutside0)
+		feeGrowthAbove1 = feeGrowthGlobal1.Sub(upper.FeeGrowthOutside1)
 	}
 }

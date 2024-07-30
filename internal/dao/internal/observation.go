@@ -20,22 +20,22 @@ type ObservationDao struct {
 
 // ObservationColumns defines and stores column names for table observation.
 type ObservationColumns struct {
-	PoolId                            string //
-	ObservationIndex                  string //
-	BlockTimestamp                    string //
-	TickCumulative                    string //
-	SecondsPerLiquidityCumulativeX128 string //
-	Initialized                       string //
+	PoolId                        string //
+	ObservationIndex              string //
+	BlockTimestamp                string //
+	TickCumulative                string //
+	SecondsPerLiquidityCumulative string //
+	Initialized                   string //
 }
 
 // observationColumns holds the columns for table observation.
 var observationColumns = ObservationColumns{
-	PoolId:                            "pool_id",
-	ObservationIndex:                  "observation_index",
-	BlockTimestamp:                    "block_timestamp",
-	TickCumulative:                    "tick_cumulative",
-	SecondsPerLiquidityCumulativeX128: "seconds_per_liquidity_cumulative_x128",
-	Initialized:                       "initialized",
+	PoolId:                        "pool_id",
+	ObservationIndex:              "observation_index",
+	BlockTimestamp:                "block_timestamp",
+	TickCumulative:                "tick_cumulative",
+	SecondsPerLiquidityCumulative: "seconds_per_liquidity_cumulative",
+	Initialized:                   "initialized",
 }
 
 // NewObservationDao creates and returns a new DAO object for table data access.

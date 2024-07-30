@@ -20,28 +20,28 @@ type PositionDao struct {
 
 // PositionColumns defines and stores column names for table position.
 type PositionColumns struct {
-	PoolId                   string //
-	OwnerAddress             string //
-	TickLower                string //
-	TickUpper                string //
-	Liquidity                string //
-	FeeGrowthInside0LastX128 string //
-	FeeGrowthInside1LastX128 string //
-	TokensOwed0              string //
-	TokensOwed1              string //
+	PoolId               string //
+	OwnerAddress         string //
+	TickLower            string //
+	TickUpper            string //
+	Liquidity            string //
+	FeeGrowthInside0Last string //
+	FeeGrowthInside1Last string //
+	TokensOwed0          string //
+	TokensOwed1          string //
 }
 
 // positionColumns holds the columns for table position.
 var positionColumns = PositionColumns{
-	PoolId:                   "pool_id",
-	OwnerAddress:             "owner_address",
-	TickLower:                "tick_lower",
-	TickUpper:                "tick_upper",
-	Liquidity:                "liquidity",
-	FeeGrowthInside0LastX128: "fee_growth_inside0_last_x128",
-	FeeGrowthInside1LastX128: "fee_growth_inside1_last_x128",
-	TokensOwed0:              "tokens_owed0",
-	TokensOwed1:              "tokens_owed1",
+	PoolId:               "pool_id",
+	OwnerAddress:         "owner_address",
+	TickLower:            "tick_lower",
+	TickUpper:            "tick_upper",
+	Liquidity:            "liquidity",
+	FeeGrowthInside0Last: "fee_growth_inside0_last",
+	FeeGrowthInside1Last: "fee_growth_inside1_last",
+	TokensOwed0:          "tokens_owed0",
+	TokensOwed1:          "tokens_owed1",
 }
 
 // NewPositionDao creates and returns a new DAO object for table data access.

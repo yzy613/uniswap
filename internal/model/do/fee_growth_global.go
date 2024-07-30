@@ -10,8 +10,8 @@ import (
 
 // FeeGrowthGlobal is the golang structure of table fee_growth_global for DAO operations like Where/Data.
 type FeeGrowthGlobal struct {
-	g.Meta               `orm:"table:fee_growth_global, do:true"`
-	PoolId               interface{} //
-	FeeGrowthGlobal0X128 interface{} //
-	FeeGrowthGlobal1X128 interface{} //
+	g.Meta           `orm:"table:fee_growth_global, do:true"`
+	PoolId           interface{} //
+	FeeGrowthGlobal0 interface{} //
+	FeeGrowthGlobal1 interface{} //
 }

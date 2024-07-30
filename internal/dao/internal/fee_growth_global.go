@@ -20,16 +20,16 @@ type FeeGrowthGlobalDao struct {
 
 // FeeGrowthGlobalColumns defines and stores column names for table fee_growth_global.
 type FeeGrowthGlobalColumns struct {
-	PoolId               string //
-	FeeGrowthGlobal0X128 string //
-	FeeGrowthGlobal1X128 string //
+	PoolId           string //
+	FeeGrowthGlobal0 string //
+	FeeGrowthGlobal1 string //
 }
 
 // feeGrowthGlobalColumns holds the columns for table fee_growth_global.
 var feeGrowthGlobalColumns = FeeGrowthGlobalColumns{
-	PoolId:               "pool_id",
-	FeeGrowthGlobal0X128: "fee_growth_global0_x128",
-	FeeGrowthGlobal1X128: "fee_growth_global1_x128",
+	PoolId:           "pool_id",
+	FeeGrowthGlobal0: "fee_growth_global0",
+	FeeGrowthGlobal1: "fee_growth_global1",
 }
 
 // NewFeeGrowthGlobalDao creates and returns a new DAO object for table data access.

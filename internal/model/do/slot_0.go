@@ -12,7 +12,7 @@ import (
 type Slot0 struct {
 	g.Meta                     `orm:"table:slot0, do:true"`
 	PoolId                     interface{} //
-	SqrtPriceX96               interface{} //
+	Price                      interface{} //
 	CurrentTick                interface{} //
 	ObservationIndex           interface{} //
 	ObservationCardinality     interface{} //

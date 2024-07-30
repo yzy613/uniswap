@@ -31,12 +31,12 @@ func NewObservationUsecase(repo ObservationRepo, logger log.Logger) *Observation
 func (uc *ObservationUsecase) Initialize(pool Pool, time uint32) (cardinality, cardinalityNext uint16, err error) {
 	o := Observation{
 		Observation: entity.Observation{
-			PoolId:                            pool.Id,
-			ObservationIndex:                  0,
-			BlockTimestamp:                    int(time),
-			TickCumulative:                    0,
-			SecondsPerLiquidityCumulativeX128: decimal.Zero,
-			Initialized:                       1,
+			PoolId:                        pool.Id,
+			ObservationIndex:              0,
+			BlockTimestamp:                int(time),
+			TickCumulative:                0,
+			SecondsPerLiquidityCumulative: decimal.Zero,
+			Initialized:                   1,
 		},
 	}
 
@@ -63,10 +63,10 @@ func (uc *ObservationUsecase) transform(
 
 	return &Observation{
 		Observation: entity.Observation{
-			BlockTimestamp:                    int(blockTimestamp),
-			TickCumulative:                    last.TickCumulative + int(tick)*int(delta),
-			SecondsPerLiquidityCumulativeX128: splc,
-			Initialized:                       1,
+			BlockTimestamp:                int(blockTimestamp),
+			TickCumulative:                last.TickCumulative + int(tick)*int(delta),
+			SecondsPerLiquidityCumulative: splc,
+			Initialized:                   1,
 		},
 	}
 }
@@ -152,7 +152,7 @@ func (uc *ObservationUsecase) getSurroundingObservations(poolId int64, time, tar
 
 func (uc *ObservationUsecase) ObserveSingle(poolId int64, time, secondsAgo uint32, tick int32, index uint16,
 	liquidity decimal.Decimal, cardinality uint16,
-) (tickCumulative int64, secondsPerLiquidityCumulativeX128 decimal.Decimal, err error) {
+) (tickCumulative int64, secondsPerLiquidityCumulative decimal.Decimal, err error) {
 	if secondsAgo == 0 {
 		var last *Observation
 		last, err = uc.repo.GetObservation(poolId, index)
@@ -162,7 +162,7 @@ func (uc *ObservationUsecase) ObserveSingle(poolId int64, time, secondsAgo uint3
 
 		if last.BlockTimestamp != int(time) {
 			last = uc.transform(*last, time, tick, liquidity)
-			return int64(last.TickCumulative), last.SecondsPerLiquidityCumulativeX128, nil
+			return int64(last.TickCumulative), last.SecondsPerLiquidityCumulative, nil
 		}
 	}
 
@@ -175,9 +175,9 @@ func (uc *ObservationUsecase) ObserveSingle(poolId int64, time, secondsAgo uint3
 	}
 
 	if target == uint32(beforeOrAt.BlockTimestamp) {
-		return int64(beforeOrAt.TickCumulative), beforeOrAt.SecondsPerLiquidityCumulativeX128, nil
+		return int64(beforeOrAt.TickCumulative), beforeOrAt.SecondsPerLiquidityCumulative, nil
 	} else if target == uint32(atOrAfter.BlockTimestamp) {
-		return int64(atOrAfter.TickCumulative), atOrAfter.SecondsPerLiquidityCumulativeX128, nil
+		return int64(atOrAfter.TickCumulative), atOrAfter.SecondsPerLiquidityCumulative, nil
 	} else {
 		observationTimeDelta := uint32(atOrAfter.BlockTimestamp - beforeOrAt.BlockTimestamp)
 		targetDelta := target - uint32(beforeOrAt.BlockTimestamp)
@@ -185,10 +185,10 @@ func (uc *ObservationUsecase) ObserveSingle(poolId int64, time, secondsAgo uint3
 		tickCumulative = int64(beforeOrAt.TickCumulative) +
 			((int64(atOrAfter.TickCumulative)-int64(beforeOrAt.TickCumulative))/int64(observationTimeDelta))*
 				int64(targetDelta)
-		secondsPerLiquidityCumulativeX128 =
-			beforeOrAt.SecondsPerLiquidityCumulativeX128.Add(
-				atOrAfter.SecondsPerLiquidityCumulativeX128.Sub(
-					beforeOrAt.SecondsPerLiquidityCumulativeX128).Mul(
+		secondsPerLiquidityCumulative =
+			beforeOrAt.SecondsPerLiquidityCumulative.Add(
+				atOrAfter.SecondsPerLiquidityCumulative.Sub(
+					beforeOrAt.SecondsPerLiquidityCumulative).Mul(
 					decimal.NewFromInt(int64(targetDelta))).Div(
 					decimal.NewFromInt(int64(observationTimeDelta))))
 	}

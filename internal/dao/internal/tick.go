@@ -20,30 +20,30 @@ type TickDao struct {
 
 // TickColumns defines and stores column names for table tick.
 type TickColumns struct {
-	PoolId                         string //
-	TickIndex                      string //
-	LiquidityGross                 string //
-	LiquidityNet                   string //
-	FeeGrowthOutside0X128          string //
-	FeeGrowthOutside1X128          string //
-	SecondsPerLiquidityOutsideX128 string //
-	TickCumulativeOutside          string //
-	SecondsOutside                 string //
-	Initialized                    string //
+	PoolId                     string //
+	TickIndex                  string //
+	LiquidityGross             string //
+	LiquidityNet               string //
+	FeeGrowthOutside0          string //
+	FeeGrowthOutside1          string //
+	SecondsPerLiquidityOutside string //
+	TickCumulativeOutside      string //
+	SecondsOutside             string //
+	Initialized                string //
 }
 
 // tickColumns holds the columns for table tick.
 var tickColumns = TickColumns{
-	PoolId:                         "pool_id",
-	TickIndex:                      "tick_index",
-	LiquidityGross:                 "liquidity_gross",
-	LiquidityNet:                   "liquidity_net",
-	FeeGrowthOutside0X128:          "fee_growth_outside0_x128",
-	FeeGrowthOutside1X128:          "fee_growth_outside1_x128",
-	SecondsPerLiquidityOutsideX128: "seconds_per_liquidity_outside_x128",
-	TickCumulativeOutside:          "tick_cumulative_outside",
-	SecondsOutside:                 "seconds_outside",
-	Initialized:                    "initialized",
+	PoolId:                     "pool_id",
+	TickIndex:                  "tick_index",
+	LiquidityGross:             "liquidity_gross",
+	LiquidityNet:               "liquidity_net",
+	FeeGrowthOutside0:          "fee_growth_outside0",
+	FeeGrowthOutside1:          "fee_growth_outside1",
+	SecondsPerLiquidityOutside: "seconds_per_liquidity_outside",
+	TickCumulativeOutside:      "tick_cumulative_outside",
+	SecondsOutside:             "seconds_outside",
+	Initialized:                "initialized",
 }
 
 // NewTickDao creates and returns a new DAO object for table data access.

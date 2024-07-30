@@ -21,7 +21,7 @@ type Slot0Dao struct {
 // Slot0Columns defines and stores column names for table slot0.
 type Slot0Columns struct {
 	PoolId                     string //
-	SqrtPriceX96               string //
+	Price                      string //
 	CurrentTick                string //
 	ObservationIndex           string //
 	ObservationCardinality     string //
@@ -33,7 +33,7 @@ type Slot0Columns struct {
 // slot0Columns holds the columns for table slot0.
 var slot0Columns = Slot0Columns{
 	PoolId:                     "pool_id",
-	SqrtPriceX96:               "sqrt_price_x96",
+	Price:                      "price",
 	CurrentTick:                "current_tick",
 	ObservationIndex:           "observation_index",
 	ObservationCardinality:     "observation_cardinality",

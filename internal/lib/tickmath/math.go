@@ -138,19 +138,19 @@ func GetSqrtRatioAtTick(tick int32) (decimal.Decimal, error) {
 		ratio = MaxUint256.DivRound(ratio, 0)
 	}
 
-	sqrtPriceX96 := util.DecimalRsh(ratio, 32)
+	price := util.DecimalRsh(ratio, 32)
 	if !ratio.Mod(decimal.NewFromInt(1 << 32)).Equal(decimal.Zero) {
-		sqrtPriceX96.Add(decimal.NewFromInt(1))
+		price.Add(decimal.NewFromInt(1))
 	}
-	return sqrtPriceX96, nil
+	return price, nil
 }
 
-func GetTickAtSqrtRatio(sqrtPriceX96 decimal.Decimal) (int32, error) {
-	if sqrtPriceX96.Cmp(MinSqrtRatio) < 0 || sqrtPriceX96.Cmp(MaxSqrtRatio) >= 0 {
-		return 0, errors.New("sqrtPriceX96 out of range")
+func GetTickAtSqrtRatio(price decimal.Decimal) (int32, error) {
+	if price.Cmp(MinSqrtRatio) < 0 || price.Cmp(MaxSqrtRatio) >= 0 {
+		return 0, errors.New("price out of range")
 	}
 
-	ratio := util.DecimalLsh(sqrtPriceX96, 32)
+	ratio := util.DecimalLsh(price, 32)
 
 	r := ratio
 	msb := uint32(0)
@@ -221,7 +221,7 @@ func GetTickAtSqrtRatio(sqrtPriceX96 decimal.Decimal) (int32, error) {
 		return tickLow, nil
 	}
 
-	if d, _ := GetSqrtRatioAtTick(tickHi); d.Cmp(sqrtPriceX96) <= 0 {
+	if d, _ := GetSqrtRatioAtTick(tickHi); d.Cmp(price) <= 0 {
 		return tickHi, nil
 	}
 	return tickLow, nil

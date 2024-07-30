@@ -124,13 +124,13 @@ func (r *poolRepo) GetPosition(poolId int64, owner string, tickLower, tickUpper 
 }
 
 func (r *poolRepo) UpdatePosition(position biz.Position,
-	liquidityDelta, feeGrowthInside0X128, feeGrowthInside1X128 decimal.Decimal,
+	liquidityDelta, feeGrowthInside0, feeGrowthInside1 decimal.Decimal,
 ) error {
 	ctx := context.TODO()
 	data := entity.Position{
-		Liquidity:                position.Liquidity.Add(liquidityDelta),
-		FeeGrowthInside0LastX128: feeGrowthInside0X128,
-		FeeGrowthInside1LastX128: feeGrowthInside1X128,
+		Liquidity:            position.Liquidity.Add(liquidityDelta),
+		FeeGrowthInside0Last: feeGrowthInside0,
+		FeeGrowthInside1Last: feeGrowthInside1,
 	}
 
 	_, err := dao.Position.Ctx(ctx).
@@ -175,7 +175,7 @@ func (r *poolRepo) SaveSlot0(slot0 biz.Slot0) error {
 }
 
 func (r *poolRepo) GetFeeGrowthGlobal(poolId int64,
-) (feeGrowthGlobal0X128, feeGrowthGlobal1X128 decimal.Decimal, err error) {
+) (feeGrowthGlobal0, feeGrowthGlobal1 decimal.Decimal, err error) {
 	ctx := context.TODO()
 	var feeGrowthGlobal *entity.FeeGrowthGlobal
 
@@ -183,5 +183,5 @@ func (r *poolRepo) GetFeeGrowthGlobal(poolId int64,
 		Where(dao.FeeGrowthGlobal.Columns().PoolId, poolId).
 		Scan(&feeGrowthGlobal)
 
-	return feeGrowthGlobal.FeeGrowthGlobal0X128, feeGrowthGlobal.FeeGrowthGlobal1X128, err
+	return feeGrowthGlobal.FeeGrowthGlobal0, feeGrowthGlobal.FeeGrowthGlobal1, err
 }

@@ -10,11 +10,11 @@ import (
 
 // Observation is the golang structure of table observation for DAO operations like Where/Data.
 type Observation struct {
-	g.Meta                            `orm:"table:observation, do:true"`
-	PoolId                            interface{} //
-	ObservationIndex                  interface{} //
-	BlockTimestamp                    interface{} //
-	TickCumulative                    interface{} //
-	SecondsPerLiquidityCumulativeX128 interface{} //
-	Initialized                       interface{} //
+	g.Meta                        `orm:"table:observation, do:true"`
+	PoolId                        interface{} //
+	ObservationIndex              interface{} //
+	BlockTimestamp                interface{} //
+	TickCumulative                interface{} //
+	SecondsPerLiquidityCumulative interface{} //
+	Initialized                   interface{} //
 }

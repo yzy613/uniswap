@@ -12,7 +12,8 @@ import (
 
 const (
 	// TODO: 精度问题
-	MinTick = -887272
+	//MinTick = -887272
+	MinTick = 886463
 	MaxTick = -MinTick
 )
 
@@ -36,10 +37,10 @@ type PoolRepo interface {
 	FeeAmountTickSpacing(fee uint32) (tickSpacing int32)
 	GetPosition(poolId int64, owner string, tickLower, tickUpper int32) (*Position, error)
 	UpdatePosition(position Position,
-		liquidityDelta, feeGrowthInside0X128, feeGrowthInside1X128 decimal.Decimal) error
+		liquidityDelta, feeGrowthInside0, feeGrowthInside1 decimal.Decimal) error
 	GetSlot0(poolId int64) (*Slot0, error)
 	SaveSlot0(slot0 Slot0) error
-	GetFeeGrowthGlobal(poolId int64) (feeGrowthGlobal0X128, feeGrowthGlobal1X128 decimal.Decimal, err error)
+	GetFeeGrowthGlobal(poolId int64) (feeGrowthGlobal0, feeGrowthGlobal1 decimal.Decimal, err error)
 }
 
 type PoolUsecase struct {
@@ -55,15 +56,15 @@ func NewPoolUsecase(repo PoolRepo, logger log.Logger, tickUsecase *TickUsecase) 
 	return &PoolUsecase{repo: repo, log: log.NewHelper(logger), tickUsecase: tickUsecase}
 }
 
-func (uc *PoolUsecase) initialize(pool Pool, sqrtPriceX96 decimal.Decimal) error {
+func (uc *PoolUsecase) initialize(pool Pool, price decimal.Decimal) error {
 	slot0, err := uc.repo.GetSlot0(pool.Id)
 	if err != nil {
 		return err
 	}
-	if slot0 != nil && !slot0.SqrtPriceX96.IsZero() {
+	if slot0 != nil && !slot0.Price.IsZero() {
 		return errors.BadRequest("SLOT0_EXISTS", "slot0 already exists")
 	}
-	tick, err := tickmath.GetTickAtSqrtRatio(sqrtPriceX96)
+	tick, err := tickmath.GetTickAtSqrtRatio(price)
 	if err != nil {
 		return err
 	}
@@ -76,7 +77,7 @@ func (uc *PoolUsecase) initialize(pool Pool, sqrtPriceX96 decimal.Decimal) error
 	return uc.repo.SaveSlot0(Slot0{
 		Slot0: entity.Slot0{
 			PoolId:                     pool.Id,
-			SqrtPriceX96:               sqrtPriceX96,
+			Price:                      price,
 			CurrentTick:                int(tick),
 			ObservationIndex:           0,
 			ObservationCardinality:     int(cardinality),
@@ -146,7 +147,7 @@ func (uc *PoolUsecase) updatePosition(pool Pool, owner string, tickLower, tickUp
 	if err != nil {
 		return nil, err
 	}
-	feeGrowthGlobal0X128, feeGrowthGlobal1X128, err := uc.repo.GetFeeGrowthGlobal(pool.Id)
+	feeGrowthGlobal0, feeGrowthGlobal1, err := uc.repo.GetFeeGrowthGlobal(pool.Id)
 	if err != nil {
 		return nil, err
 	}
@@ -154,7 +155,7 @@ func (uc *PoolUsecase) updatePosition(pool Pool, owner string, tickLower, tickUp
 	if !liquidityDelta.IsZero() {
 		// TODO: _blockTimestamp()
 		time_ := uint32(time.Now().Unix())
-		tickCumulative, secondsPerLiquidityCumulativeX128, err := uc.observation.ObserveSingle(
+		tickCumulative, secondsPerLiquidityCumulative, err := uc.observation.ObserveSingle(
 			pool.Id,
 			time_,
 			0,
@@ -166,14 +167,14 @@ func (uc *PoolUsecase) updatePosition(pool Pool, owner string, tickLower, tickUp
 		if err != nil {
 			return nil, err
 		}
-		flippedLower, err = uc.tickUsecase.Update(pool.Id, tick, tickLower, liquidityDelta, feeGrowthGlobal0X128,
-			feeGrowthGlobal1X128, secondsPerLiquidityCumulativeX128, tickCumulative, time_,
+		flippedLower, err = uc.tickUsecase.Update(pool.Id, tick, tickLower, liquidityDelta, feeGrowthGlobal0,
+			feeGrowthGlobal1, secondsPerLiquidityCumulative, tickCumulative, time_,
 			false, pool.MaxLiquidityPerTick)
 		if err != nil {
 			return nil, err
 		}
-		flippedUpper, err = uc.tickUsecase.Update(pool.Id, tick, tickUpper, liquidityDelta, feeGrowthGlobal0X128,
-			feeGrowthGlobal1X128, secondsPerLiquidityCumulativeX128, tickCumulative, time_,
+		flippedUpper, err = uc.tickUsecase.Update(pool.Id, tick, tickUpper, liquidityDelta, feeGrowthGlobal0,
+			feeGrowthGlobal1, secondsPerLiquidityCumulative, tickCumulative, time_,
 			true, pool.MaxLiquidityPerTick)
 		if err != nil {
 			return nil, err
@@ -192,7 +193,7 @@ func (uc *PoolUsecase) updatePosition(pool Pool, owner string, tickLower, tickUp
 			}
 		}
 
-		feeGrowthInside0X128, feeGrowthInside1X128 :=
+		feeGrowthInside0, feeGrowthInside1 :=
 			uc.tickUsecase.
 	}
 }
