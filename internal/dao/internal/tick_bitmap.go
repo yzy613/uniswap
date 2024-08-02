@@ -20,16 +20,16 @@ type TickBitmapDao struct {
 
 // TickBitmapColumns defines and stores column names for table tick_bitmap.
 type TickBitmapColumns struct {
-	PoolId       string //
-	WordPosition string //
-	Bitmap       string //
+	PoolId   string //
+	Position string //
+	Bit      string //
 }
 
 // tickBitmapColumns holds the columns for table tick_bitmap.
 var tickBitmapColumns = TickBitmapColumns{
-	PoolId:       "pool_id",
-	WordPosition: "word_position",
-	Bitmap:       "bitmap",
+	PoolId:   "pool_id",
+	Position: "position",
+	Bit:      "bit",
 }
 
 // NewTickBitmapDao creates and returns a new DAO object for table data access.

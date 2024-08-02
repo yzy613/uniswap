@@ -56,3 +56,16 @@ func (r *tickRepo) Save(tick *biz.Tick) error {
 
 	return err
 }
+
+func (r *tickRepo) Clear(poolId int64, tickIndex int32) error {
+	ctx := context.TODO()
+
+	_, err := dao.Tick.Ctx(ctx).
+		Where(g.Map{
+			dao.Tick.Columns().PoolId:    poolId,
+			dao.Tick.Columns().TickIndex: tickIndex,
+		}).
+		Delete()
+
+	return err
+}

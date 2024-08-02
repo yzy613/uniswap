@@ -14,6 +14,7 @@ type Tick struct {
 type TickRepo interface {
 	Get(poolId int64, tick int32) (*Tick, error)
 	Save(tick *Tick) error
+	Clear(poolId int64, tick int32) error
 }
 
 type TickUsecase struct {
@@ -98,4 +99,13 @@ func (uc *TickUsecase) GetFeeGrowthInside(poolId int64,
 		feeGrowthAbove0 = feeGrowthGlobal0.Sub(upper.FeeGrowthOutside0)
 		feeGrowthAbove1 = feeGrowthGlobal1.Sub(upper.FeeGrowthOutside1)
 	}
+
+	feeGrowthInside0 = feeGrowthGlobal0.Sub(feeGrowthBelow0).Sub(feeGrowthAbove0)
+	feeGrowthInside1 = feeGrowthGlobal1.Sub(feeGrowthBelow1).Sub(feeGrowthAbove1)
+
+	return
+}
+
+func (uc *TickUsecase) Clear(poolId int64, tick int32) error {
+	return uc.repo.Clear(poolId, tick)
 }

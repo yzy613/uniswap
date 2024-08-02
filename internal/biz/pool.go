@@ -10,13 +10,6 @@ import (
 	"uniswap/internal/util"
 )
 
-const (
-	// TODO: 精度问题
-	//MinTick = -887272
-	MinTick = 886463
-	MaxTick = -MinTick
-)
-
 type Slot0 struct {
 	entity.Slot0
 }
@@ -50,6 +43,7 @@ type PoolUsecase struct {
 	tickUsecase *TickUsecase
 	observation *ObservationUsecase
 	tickBitmap  *TickBitmapUsecase
+	liquidity   *LiquidityUsecase
 }
 
 func NewPoolUsecase(repo PoolRepo, logger log.Logger, tickUsecase *TickUsecase) *PoolUsecase {
@@ -64,7 +58,7 @@ func (uc *PoolUsecase) initialize(pool Pool, price decimal.Decimal) error {
 	if slot0 != nil && !slot0.Price.IsZero() {
 		return errors.BadRequest("SLOT0_EXISTS", "slot0 already exists")
 	}
-	tick, err := tickmath.GetTickAtSqrtRatio(price)
+	tick, err := tickmath.GetTickAtRatio(price)
 	if err != nil {
 		return err
 	}
@@ -109,10 +103,9 @@ func (uc *PoolUsecase) CreatePool(token0, token1 string, fee uint32) (*Pool, err
 	return uc.repo.CreatePool(token0, token1, fee, tickSpacing, uc.tickSpacingToMaxLiquidityPerTick(tickSpacing))
 }
 
-// TODO: 用这个来测试精度
 func (uc *PoolUsecase) tickSpacingToMaxLiquidityPerTick(tickSpacing int32) decimal.Decimal {
-	minTick := MinTick / tickSpacing * tickSpacing
-	maxTick := MaxTick / tickSpacing * tickSpacing
+	minTick := tickmath.MinTick / tickSpacing * tickSpacing
+	maxTick := tickmath.MaxTick / tickSpacing * tickSpacing
 	numTicks := uint32((maxTick-minTick)/tickSpacing) + 1
 
 	return util.BitMaxNumDecimal(128).DivRound(decimal.NewFromInt(int64(numTicks)), 0)
@@ -122,7 +115,7 @@ func (uc *PoolUsecase) checkTick(tickLower, tickUpper int32) error {
 	if tickLower >= tickUpper {
 		return errors.BadRequest("INVALID_TICK", "tickLower must be less than tickUpper")
 	}
-	if tickLower < MinTick || tickUpper > MaxTick {
+	if tickLower < tickmath.MinTick || tickUpper > tickmath.MaxTick {
 		return errors.BadRequest("INVALID_TICK", "tickLower and tickUpper must be within the range")
 	}
 	return nil
@@ -130,15 +123,51 @@ func (uc *PoolUsecase) checkTick(tickLower, tickUpper int32) error {
 
 func (uc *PoolUsecase) Mint(pool Pool, tickLower, tickUpper int32, amount decimal.Decimal,
 ) (amount0, amount1 decimal.Decimal, err error) {
-
+	// TODO: Mint
+	return decimal.Zero, decimal.Zero, nil
 }
 
-func (uc *PoolUsecase) modifyPosition(owner string, tickLower, tickUpper int32, liquidityDelta decimal.Decimal,
+func (uc *PoolUsecase) modifyPosition(poolId int64, owner string, tickLower, tickUpper int32, liquidityDelta decimal.Decimal,
 ) (position *Position, amount0, amount1 decimal.Decimal, err error) {
 	err = uc.checkTick(tickLower, tickUpper)
 	if err != nil {
 		return
 	}
+
+	slot0, err := uc.repo.GetSlot0(poolId)
+	if err != nil {
+		return nil, decimal.Zero, decimal.Zero, err
+	}
+
+	position, err = uc.updatePosition(Pool{Pool: entity.Pool{Id: poolId}, slot0: slot0},
+		owner, tickLower, tickUpper, liquidityDelta, int32(slot0.CurrentTick))
+	if err != nil {
+		return nil, decimal.Zero, decimal.Zero, err
+	}
+
+	if !liquidityDelta.IsZero() {
+		if slot0.CurrentTick < int(tickLower) {
+			amount0 = liquidityDelta
+		} else if slot0.CurrentTick < int(tickUpper) {
+			liquidity, err := uc.liquidity.Get(poolId)
+			if err != nil {
+				return nil, decimal.Decimal{}, decimal.Decimal{}, err
+			}
+
+			indexUpdated, cardinalityUpdated, err := uc.observation.Write(poolId,
+				uint16(slot0.ObservationIndex), uint32(time.Now().Unix()),
+				int32(slot0.CurrentTick), liquidity, uint16(slot0.ObservationCardinality),
+				uint16(slot0.ObservationCardinalityNext))
+			if err != nil {
+				return nil, decimal.Decimal{}, decimal.Decimal{}, err
+			}
+
+			amount0 =
+		}
+	}
+
+	// TODO: to be continue
+	return nil, decimal.Decimal{}, decimal.Decimal{}, nil
 }
 
 func (uc *PoolUsecase) updatePosition(pool Pool, owner string, tickLower, tickUpper int32, liquidityDelta decimal.Decimal,
@@ -192,8 +221,29 @@ func (uc *PoolUsecase) updatePosition(pool Pool, owner string, tickLower, tickUp
 				return nil, err
 			}
 		}
-
-		feeGrowthInside0, feeGrowthInside1 :=
-			uc.tickUsecase.
 	}
+	feeGrowthInside0, feeGrowthInside1, err := uc.tickUsecase.GetFeeGrowthInside(pool.Id,
+		tickLower, tickUpper, tick, feeGrowthGlobal0, feeGrowthGlobal1)
+	if err != nil {
+		return nil, err
+	}
+
+	err = uc.repo.UpdatePosition(*position, liquidityDelta, feeGrowthInside0, feeGrowthInside1)
+	if err != nil {
+		return nil, err
+	}
+
+	if liquidityDelta.LessThan(decimal.Zero) {
+		if flippedLower {
+			err = uc.tickUsecase.Clear(pool.Id, tickLower)
+			return nil, err
+		}
+		if flippedUpper {
+			err = uc.tickUsecase.Clear(pool.Id, tickUpper)
+			return nil, err
+		}
+	}
+
+	// TODO: to be continue
+	return position, nil
 }

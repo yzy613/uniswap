@@ -21,34 +21,64 @@ func NewTickBitmapRepo(data *Data, logger log.Logger) biz.TickBitmapRepo {
 	}
 }
 
-func (r *tickBitmapRepo) GetBitmap(poolId int64, wordPos int16) (string, error) {
+func (r *tickBitmapRepo) GetBit(poolId int64, position int32) (bool, error) {
 	ctx := context.TODO()
 	var bitmap entity.TickBitmap
 
 	err := dao.TickBitmap.Ctx(ctx).
 		Where(g.Map{
-			dao.TickBitmap.Columns().PoolId:       poolId,
-			dao.TickBitmap.Columns().WordPosition: wordPos,
+			dao.TickBitmap.Columns().PoolId:   poolId,
+			dao.TickBitmap.Columns().Position: position,
 		}).
 		Scan(&bitmap)
 	if err != nil {
-		return "", err
+		return false, err
 	}
 
-	return bitmap.Bitmap, nil
+	return bitmap.Bit != 0, nil
 }
 
-func (r *tickBitmapRepo) SetBitmap(poolId int64, wordPos int16, bitmap string) error {
+func (r *tickBitmapRepo) SetBit(poolId int64, position int32, bit bool) error {
 	ctx := context.TODO()
 
 	_, err := dao.TickBitmap.Ctx(ctx).
 		Data(g.Map{
-			dao.TickBitmap.Columns().PoolId:       poolId,
-			dao.TickBitmap.Columns().WordPosition: wordPos,
-			dao.TickBitmap.Columns().Bitmap:       bitmap,
+			dao.TickBitmap.Columns().PoolId:   poolId,
+			dao.TickBitmap.Columns().Position: position,
+			dao.TickBitmap.Columns().Bit:      bit,
 		}).
-		OnConflict(dao.TickBitmap.Columns().PoolId, dao.TickBitmap.Columns().WordPosition).
+		OnConflict(dao.TickBitmap.Columns().PoolId, dao.TickBitmap.Columns().Position).
 		Save()
 
 	return err
+}
+
+func (r *tickBitmapRepo) GetNextTruePosition(poolId int64, position int32, lte bool, fallbackPos int32) (int32, bool, error) {
+	ctx := context.TODO()
+	var bitmap *entity.TickBitmap
+
+	query := dao.TickBitmap.Ctx(ctx).
+		Where(g.Map{
+			dao.TickBitmap.Columns().PoolId: poolId,
+			dao.TickBitmap.Columns().Bit:    true,
+		})
+	if lte {
+		query = query.WhereLTE(dao.TickBitmap.Columns().Position, position).
+			WhereGTE(dao.TickBitmap.Columns().Position, fallbackPos).
+			OrderDesc(dao.TickBitmap.Columns().Position)
+	} else {
+		query = query.WhereGT(dao.TickBitmap.Columns().Position, position).
+			WhereLTE(dao.TickBitmap.Columns().Position, fallbackPos).
+			OrderAsc(dao.TickBitmap.Columns().Position)
+	}
+	err := query.Scan(&bitmap)
+	if err != nil {
+		return 0, false, err
+	}
+
+	if bitmap == nil {
+		return fallbackPos, false, nil
+	}
+
+	return int32(bitmap.Position), bitmap.Bit != 0, nil
 }

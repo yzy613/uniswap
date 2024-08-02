@@ -48,6 +48,34 @@ func (uc *ObservationUsecase) Initialize(pool Pool, time uint32) (cardinality, c
 	return 1, 1, nil
 }
 
+func (uc *ObservationUsecase) Write(poolId int64, index uint16, blockTimestamp uint32, tick int32,
+	liquidity decimal.Decimal, cardinality, cardinalityNext uint16,
+) (indexUpdated, cardinalityUpdated uint16, err error) {
+	last, err := uc.repo.GetObservation(poolId, index)
+	if err != nil {
+		return 0, 0, err
+	}
+
+	if last.BlockTimestamp == int(blockTimestamp) {
+		return index, cardinality, nil
+	}
+
+	if cardinalityNext > cardinality && index == (cardinality-1) {
+		cardinalityUpdated = cardinalityNext
+	} else {
+		cardinalityUpdated = cardinality
+	}
+
+	indexUpdated = (index + 1) % cardinalityUpdated
+
+	err = uc.repo.SaveObservation(*uc.transform(*last, blockTimestamp, tick, liquidity))
+	if err != nil {
+		return 0, 0, err
+	}
+
+	return
+}
+
 func (uc *ObservationUsecase) transform(
 	last Observation, blockTimestamp uint32, tick int32, liquidity decimal.Decimal) *Observation {
 	delta := blockTimestamp - uint32(last.BlockTimestamp)

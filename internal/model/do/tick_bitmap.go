@@ -10,8 +10,8 @@ import (
 
 // TickBitmap is the golang structure of table tick_bitmap for DAO operations like Where/Data.
 type TickBitmap struct {
-	g.Meta       `orm:"table:tick_bitmap, do:true"`
-	PoolId       interface{} //
-	WordPosition interface{} //
-	Bitmap       interface{} //
+	g.Meta   `orm:"table:tick_bitmap, do:true"`
+	PoolId   interface{} //
+	Position interface{} //
+	Bit      interface{} //
 }
