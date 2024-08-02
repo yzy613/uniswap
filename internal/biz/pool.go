@@ -5,6 +5,7 @@ import (
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/shopspring/decimal"
 	"time"
+	"uniswap/internal/lib/pricemath"
 	"uniswap/internal/lib/tickmath"
 	"uniswap/internal/model/entity"
 	"uniswap/internal/util"
@@ -161,13 +162,52 @@ func (uc *PoolUsecase) modifyPosition(poolId int64, owner string, tickLower, tic
 			if err != nil {
 				return nil, decimal.Decimal{}, decimal.Decimal{}, err
 			}
+			slot0.ObservationIndex, slot0.ObservationCardinality = int(indexUpdated), int(cardinalityUpdated)
+			err = uc.repo.SaveSlot0(*slot0)
+			if err != nil {
+				return nil, decimal.Decimal{}, decimal.Decimal{}, err
+			}
 
-			amount0 =
+			ratio, err := tickmath.GetRatioAtTick(tickUpper)
+			if err != nil {
+				return nil, decimal.Decimal{}, decimal.Decimal{}, err
+			}
+			amount0, err = pricemath.GetAmount0Delta(slot0.Price, ratio, liquidityDelta)
+			if err != nil {
+				return nil, decimal.Decimal{}, decimal.Decimal{}, err
+			}
+
+			ratio, err = tickmath.GetRatioAtTick(tickLower)
+			if err != nil {
+				return nil, decimal.Decimal{}, decimal.Decimal{}, err
+			}
+			amount1, err = pricemath.GetAmount1Delta(ratio, slot0.Price, liquidityDelta)
+			if err != nil {
+				return nil, decimal.Decimal{}, decimal.Decimal{}, err
+			}
+
+			err = uc.liquidity.Save(poolId, liquidity.Add(liquidityDelta))
+			if err != nil {
+				return nil, decimal.Decimal{}, decimal.Decimal{}, err
+			}
+		} else {
+			ratioLower, err := tickmath.GetRatioAtTick(tickLower)
+			if err != nil {
+				return nil, decimal.Decimal{}, decimal.Decimal{}, err
+			}
+			ratioUpper, err := tickmath.GetRatioAtTick(tickUpper)
+			if err != nil {
+				return nil, decimal.Decimal{}, decimal.Decimal{}, err
+			}
+
+			amount1, err = pricemath.GetAmount1Delta(ratioLower, ratioUpper, liquidityDelta)
+			if err != nil {
+				return nil, decimal.Decimal{}, decimal.Decimal{}, err
+			}
 		}
 	}
 
-	// TODO: to be continue
-	return nil, decimal.Decimal{}, decimal.Decimal{}, nil
+	return
 }
 
 func (uc *PoolUsecase) updatePosition(pool Pool, owner string, tickLower, tickUpper int32, liquidityDelta decimal.Decimal,
@@ -176,10 +216,12 @@ func (uc *PoolUsecase) updatePosition(pool Pool, owner string, tickLower, tickUp
 	if err != nil {
 		return nil, err
 	}
+
 	feeGrowthGlobal0, feeGrowthGlobal1, err := uc.repo.GetFeeGrowthGlobal(pool.Id)
 	if err != nil {
 		return nil, err
 	}
+
 	var flippedLower, flippedUpper bool
 	if !liquidityDelta.IsZero() {
 		// TODO: _blockTimestamp()
@@ -222,6 +264,7 @@ func (uc *PoolUsecase) updatePosition(pool Pool, owner string, tickLower, tickUp
 			}
 		}
 	}
+
 	feeGrowthInside0, feeGrowthInside1, err := uc.tickUsecase.GetFeeGrowthInside(pool.Id,
 		tickLower, tickUpper, tick, feeGrowthGlobal0, feeGrowthGlobal1)
 	if err != nil {
@@ -244,6 +287,5 @@ func (uc *PoolUsecase) updatePosition(pool Pool, owner string, tickLower, tickUp
 		}
 	}
 
-	// TODO: to be continue
 	return position, nil
 }

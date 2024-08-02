@@ -85,9 +85,8 @@ func (uc *ObservationUsecase) transform(
 		liquidityInt = big.NewInt(1)
 	}
 	deltaInt := big.NewInt(int64(delta))
-	_splc := new(big.Int).Lsh(deltaInt, 128)
-	_splc = new(big.Int).Div(_splc, liquidityInt)
-	splc := decimal.NewFromBigInt(_splc, 0)
+	deltaInt.Div(deltaInt, liquidityInt)
+	splc := decimal.NewFromBigInt(deltaInt, 0)
 
 	return &Observation{
 		Observation: entity.Observation{

@@ -12,6 +12,7 @@ type Liquidity struct {
 
 type LiquidityRepo interface {
 	GetLiquidity(poolId int64) (*Liquidity, error)
+	SaveLiquidity(liquidity Liquidity) error
 }
 
 type LiquidityUsecase struct {
@@ -26,4 +27,13 @@ func (uc *LiquidityUsecase) Get(poolId int64) (decimal.Decimal, error) {
 	}
 
 	return l.Liquidity.Liquidity, nil
+}
+
+func (uc *LiquidityUsecase) Save(poolId int64, liquidity decimal.Decimal) error {
+	l := Liquidity{entity.Liquidity{
+		PoolId:    poolId,
+		Liquidity: liquidity,
+	}}
+
+	return uc.repo.SaveLiquidity(l)
 }

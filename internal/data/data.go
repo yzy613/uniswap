@@ -15,6 +15,7 @@ var ProviderSet = wire.NewSet(
 	NewTickRepo,
 	NewObservationRepo,
 	NewTickBitmapRepo,
+	NewLiquidityRepo,
 )
 
 // Data .

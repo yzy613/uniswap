@@ -7,11 +7,9 @@ import (
 
 func TestGetRatioAtTickAndInverse(t *testing.T) {
 	cpuN := runtime.NumCPU()
-	if cpuN&1 == 1 {
-		cpuN--
-	}
 
 	tasks := make(chan int32, cpuN)
+
 	for i := 0; i < cpuN; i++ {
 		go func() {
 			for tick := range tasks {
@@ -25,6 +23,7 @@ func TestGetRatioAtTickAndInverse(t *testing.T) {
 		}()
 	}
 
+	// 跑不完
 	testLower := MinTick >> 2
 	testUpper := MaxTick >> 2
 
