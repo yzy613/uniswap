@@ -34,6 +34,8 @@ type PoolRepo interface {
 		liquidityDelta, feeGrowthInside0, feeGrowthInside1 decimal.Decimal) error
 	GetSlot0(poolId int64) (*Slot0, error)
 	SaveSlot0(slot0 Slot0) error
+	TryLockSlot0(poolId int64) error
+	UnlockSlot0(poolId int64) error
 	GetFeeGrowthGlobal(poolId int64) (feeGrowthGlobal0, feeGrowthGlobal1 decimal.Decimal, err error)
 }
 
@@ -41,14 +43,18 @@ type PoolUsecase struct {
 	repo PoolRepo
 	log  *log.Helper
 
-	tickUsecase *TickUsecase
+	tick        *TickUsecase
 	observation *ObservationUsecase
 	tickBitmap  *TickBitmapUsecase
 	liquidity   *LiquidityUsecase
 }
 
 func NewPoolUsecase(repo PoolRepo, logger log.Logger, tickUsecase *TickUsecase) *PoolUsecase {
-	return &PoolUsecase{repo: repo, log: log.NewHelper(logger), tickUsecase: tickUsecase}
+	return &PoolUsecase{repo: repo, log: log.NewHelper(logger), tick: tickUsecase}
+}
+
+func (uc *PoolUsecase) GetPool(token0, token1 string, fee uint32) (*Pool, error) {
+	return uc.repo.GetPool(token0, token1, fee)
 }
 
 func (uc *PoolUsecase) initialize(pool Pool, price decimal.Decimal) error {
@@ -77,7 +83,8 @@ func (uc *PoolUsecase) initialize(pool Pool, price decimal.Decimal) error {
 			ObservationIndex:           0,
 			ObservationCardinality:     int(cardinality),
 			ObservationCardinalityNext: int(cardinalityNext),
-			FeeProtocol:                0,
+			FeeProtocol0:               0,
+			FeeProtocol1:               0,
 			Unlocked:                   1,
 		},
 	})
@@ -238,13 +245,13 @@ func (uc *PoolUsecase) updatePosition(pool Pool, owner string, tickLower, tickUp
 		if err != nil {
 			return nil, err
 		}
-		flippedLower, err = uc.tickUsecase.Update(pool.Id, tick, tickLower, liquidityDelta, feeGrowthGlobal0,
+		flippedLower, err = uc.tick.Update(pool.Id, tick, tickLower, liquidityDelta, feeGrowthGlobal0,
 			feeGrowthGlobal1, secondsPerLiquidityCumulative, tickCumulative, time_,
 			false, pool.MaxLiquidityPerTick)
 		if err != nil {
 			return nil, err
 		}
-		flippedUpper, err = uc.tickUsecase.Update(pool.Id, tick, tickUpper, liquidityDelta, feeGrowthGlobal0,
+		flippedUpper, err = uc.tick.Update(pool.Id, tick, tickUpper, liquidityDelta, feeGrowthGlobal0,
 			feeGrowthGlobal1, secondsPerLiquidityCumulative, tickCumulative, time_,
 			true, pool.MaxLiquidityPerTick)
 		if err != nil {
@@ -265,7 +272,7 @@ func (uc *PoolUsecase) updatePosition(pool Pool, owner string, tickLower, tickUp
 		}
 	}
 
-	feeGrowthInside0, feeGrowthInside1, err := uc.tickUsecase.GetFeeGrowthInside(pool.Id,
+	feeGrowthInside0, feeGrowthInside1, err := uc.tick.GetFeeGrowthInside(pool.Id,
 		tickLower, tickUpper, tick, feeGrowthGlobal0, feeGrowthGlobal1)
 	if err != nil {
 		return nil, err
@@ -278,14 +285,119 @@ func (uc *PoolUsecase) updatePosition(pool Pool, owner string, tickLower, tickUp
 
 	if liquidityDelta.LessThan(decimal.Zero) {
 		if flippedLower {
-			err = uc.tickUsecase.Clear(pool.Id, tickLower)
+			err = uc.tick.Clear(pool.Id, tickLower)
 			return nil, err
 		}
 		if flippedUpper {
-			err = uc.tickUsecase.Clear(pool.Id, tickUpper)
+			err = uc.tick.Clear(pool.Id, tickUpper)
 			return nil, err
 		}
 	}
 
 	return position, nil
+}
+
+func (uc *PoolUsecase) Swap(
+	pool Pool, recipient string, zeroForOne bool, amountSpecified, priceLimit decimal.Decimal,
+) (amount0, amount1 decimal.Decimal, err error) {
+	if amountSpecified.IsZero() {
+		return decimal.Decimal{}, decimal.Decimal{}, errors.BadRequest("INVALID_AMOUNT", "amountSpecified is zero")
+	}
+
+	err = uc.repo.TryLockSlot0(pool.Id)
+	if err != nil {
+		return decimal.Decimal{}, decimal.Decimal{}, err
+	}
+
+	slot0Start, err := uc.repo.GetSlot0(pool.Id)
+	if err != nil {
+		return decimal.Decimal{}, decimal.Decimal{}, err
+	}
+
+	if zeroForOne {
+		if priceLimit.GreaterThanOrEqual(slot0Start.Price) {
+			return decimal.Decimal{}, decimal.Decimal{}, errors.BadRequest("INVALID_PRICE", "priceLimit is invalid")
+		}
+	} else {
+		if priceLimit.LessThanOrEqual(slot0Start.Price) {
+			return decimal.Decimal{}, decimal.Decimal{}, errors.BadRequest("INVALID_PRICE", "priceLimit is invalid")
+		}
+	}
+
+	cache := struct {
+		feeProtocol                   uint8
+		liquidityStart                decimal.Decimal
+		blockTimestamp                uint32
+		tickCumulative                int64
+		secondsPerLiquidityCumulative decimal.Decimal
+		computedLatestObservation     bool
+	}{}
+	cache.liquidityStart, err = uc.liquidity.Get(pool.Id)
+	if err != nil {
+		return decimal.Decimal{}, decimal.Decimal{}, err
+	}
+	cache.blockTimestamp = uint32(time.Now().Unix())
+	if zeroForOne {
+		cache.feeProtocol = uint8(slot0Start.FeeProtocol0)
+	} else {
+		cache.feeProtocol = uint8(slot0Start.FeeProtocol1)
+	}
+
+	exactInput := amountSpecified.GreaterThan(decimal.Zero)
+
+	state := struct {
+		amountSpecifiedRemaining decimal.Decimal
+		amountCalculated         decimal.Decimal
+		price                    decimal.Decimal
+		tick                     int32
+		feeGrowthGlobal          decimal.Decimal
+		protocolFee              decimal.Decimal
+		liquidity                decimal.Decimal
+	}{}
+	state.amountSpecifiedRemaining = amountSpecified
+	state.price = slot0Start.Price
+	state.tick = int32(slot0Start.CurrentTick)
+	if zeroForOne {
+		state.feeGrowthGlobal, _, err = uc.repo.GetFeeGrowthGlobal(pool.Id)
+		if err != nil {
+			return decimal.Decimal{}, decimal.Decimal{}, err
+		}
+	} else {
+		_, state.feeGrowthGlobal, err = uc.repo.GetFeeGrowthGlobal(pool.Id)
+		if err != nil {
+			return decimal.Decimal{}, decimal.Decimal{}, err
+		}
+	}
+	state.liquidity = cache.liquidityStart
+
+	for !state.amountSpecifiedRemaining.IsZero() && !state.price.Equal(priceLimit) {
+		step := struct {
+			priceStart  decimal.Decimal
+			tickNext    int32
+			initialized bool
+			priceNext   decimal.Decimal
+			amountIn    decimal.Decimal
+			amountOut   decimal.Decimal
+			feeAmount   decimal.Decimal
+		}{}
+
+		step.priceStart = state.price
+
+		step.tickNext, step.initialized, err = uc.tickBitmap.NextInitializedTickWithinOneWord(
+			pool.Id, state.tick, int32(pool.TickSpacing), zeroForOne)
+
+		if step.tickNext < tickmath.MinTick {
+			step.tickNext = tickmath.MinTick
+		} else if step.tickNext > tickmath.MaxTick {
+			step.tickNext = tickmath.MaxTick
+		}
+
+		step.priceNext, err = tickmath.GetRatioAtTick(step.tickNext)
+		if err != nil {
+			return decimal.Decimal{}, decimal.Decimal{}, err
+		}
+	}
+
+	// TODO: not done
+	return
 }

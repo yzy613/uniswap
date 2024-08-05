@@ -17,6 +17,7 @@ type Slot0 struct {
 	ObservationIndex           interface{} //
 	ObservationCardinality     interface{} //
 	ObservationCardinalityNext interface{} //
-	FeeProtocol                interface{} //
+	FeeProtocol0               interface{} //
+	FeeProtocol1               interface{} //
 	Unlocked                   interface{} //
 }

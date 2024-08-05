@@ -16,6 +16,7 @@ type Slot0 struct {
 	ObservationIndex           int             `json:"observation_index"            orm:"observation_index"            ` //
 	ObservationCardinality     int             `json:"observation_cardinality"      orm:"observation_cardinality"      ` //
 	ObservationCardinalityNext int             `json:"observation_cardinality_next" orm:"observation_cardinality_next" ` //
-	FeeProtocol                int             `json:"fee_protocol"                 orm:"fee_protocol"                 ` //
+	FeeProtocol0               int             `json:"fee_protocol_0"               orm:"fee_protocol0"                ` //
+	FeeProtocol1               int             `json:"fee_protocol_1"               orm:"fee_protocol1"                ` //
 	Unlocked                   int             `json:"unlocked"                     orm:"unlocked"                     ` //
 }

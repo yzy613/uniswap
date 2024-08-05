@@ -2,6 +2,7 @@ package data
 
 import (
 	"context"
+	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/gogf/gf/v2/frame/g"
 	"github.com/shopspring/decimal"
@@ -171,6 +172,55 @@ func (r *poolRepo) SaveSlot0(slot0 biz.Slot0) error {
 		OnConflict(dao.Slot0.Columns().PoolId).
 		Save()
 
+	return err
+}
+
+func (r *poolRepo) TryLockSlot0(poolId int64) error {
+	ctx := context.TODO()
+	var slot0 *entity.Slot0
+
+	err := dao.Slot0.Ctx(ctx).
+		Fields(dao.Slot0.Columns().Unlocked).
+		Where(dao.Slot0.Columns().PoolId, poolId).
+		Scan(&slot0)
+	if err != nil {
+		return err
+	}
+
+	if slot0.Unlocked == 0 {
+		return errors.BadRequest("SLOT0_LOCKED", "slot0 is locked")
+	}
+
+	_, err = dao.Slot0.Ctx(ctx).
+		Data(g.Map{
+			dao.Slot0.Columns().Unlocked: 1,
+		}).
+		Where(dao.Slot0.Columns().PoolId, poolId).
+		Update()
+	return err
+}
+func (r *poolRepo) UnlockSlot0(poolId int64) error {
+	ctx := context.TODO()
+	var slot0 *entity.Slot0
+
+	err := dao.Slot0.Ctx(ctx).
+		Fields(dao.Slot0.Columns().Unlocked).
+		Where(dao.Slot0.Columns().PoolId, poolId).
+		Scan(&slot0)
+	if err != nil {
+		return err
+	}
+
+	if slot0.Unlocked != 0 {
+		return errors.BadRequest("SLOT0_UNLOCKED", "slot0 is unlocked")
+	}
+
+	_, err = dao.Slot0.Ctx(ctx).
+		Data(g.Map{
+			dao.Slot0.Columns().Unlocked: 0,
+		}).
+		Where(dao.Slot0.Columns().PoolId, poolId).
+		Update()
 	return err
 }
 

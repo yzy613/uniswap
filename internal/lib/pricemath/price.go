@@ -7,13 +7,13 @@ import (
 
 func GetAmount0Delta(ratioA, ratioB, liquidity decimal.Decimal) (amount0 decimal.Decimal, err error) {
 	if liquidity.LessThan(decimal.Zero) {
-		return getAmount0Delta(ratioA, ratioB, liquidity.Neg(), false)
+		return GetAmount0DeltaWithRound(ratioA, ratioB, liquidity.Neg(), false)
 	} else {
-		return getAmount0Delta(ratioA, ratioB, liquidity, true)
+		return GetAmount0DeltaWithRound(ratioA, ratioB, liquidity, true)
 	}
 }
 
-func getAmount0Delta(ratioA, ratioB, liquidity decimal.Decimal, roundUp bool) (amount0 decimal.Decimal, err error) {
+func GetAmount0DeltaWithRound(ratioA, ratioB, liquidity decimal.Decimal, roundUp bool) (amount0 decimal.Decimal, err error) {
 	if ratioA.GreaterThan(ratioB) {
 		ratioA, ratioB = ratioB, ratioA
 	}
@@ -35,13 +35,13 @@ func getAmount0Delta(ratioA, ratioB, liquidity decimal.Decimal, roundUp bool) (a
 
 func GetAmount1Delta(ratioA, ratioB, liquidity decimal.Decimal) (amount1 decimal.Decimal, err error) {
 	if liquidity.LessThan(decimal.Zero) {
-		return getAmount1Delta(ratioA, ratioB, liquidity.Neg(), false)
+		return GetAmount1DeltaWithRound(ratioA, ratioB, liquidity.Neg(), false)
 	} else {
-		return getAmount1Delta(ratioA, ratioB, liquidity, true)
+		return GetAmount1DeltaWithRound(ratioA, ratioB, liquidity, true)
 	}
 }
 
-func getAmount1Delta(ratioA, ratioB, liquidity decimal.Decimal, roundUp bool) (amount1 decimal.Decimal, err error) {
+func GetAmount1DeltaWithRound(ratioA, ratioB, liquidity decimal.Decimal, roundUp bool) (amount1 decimal.Decimal, err error) {
 	if ratioA.GreaterThan(ratioB) {
 		ratioA, ratioB = ratioB, ratioA
 	}

@@ -26,7 +26,8 @@ type Slot0Columns struct {
 	ObservationIndex           string //
 	ObservationCardinality     string //
 	ObservationCardinalityNext string //
-	FeeProtocol                string //
+	FeeProtocol0               string //
+	FeeProtocol1               string //
 	Unlocked                   string //
 }
 
@@ -38,7 +39,8 @@ var slot0Columns = Slot0Columns{
 	ObservationIndex:           "observation_index",
 	ObservationCardinality:     "observation_cardinality",
 	ObservationCardinalityNext: "observation_cardinality_next",
-	FeeProtocol:                "fee_protocol",
+	FeeProtocol0:               "fee_protocol0",
+	FeeProtocol1:               "fee_protocol1",
 	Unlocked:                   "unlocked",
 }
 
