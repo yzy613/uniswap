@@ -165,6 +165,10 @@ func (r *poolRepo) GetSlot0(poolId int64) (*biz.Slot0, error) {
 }
 
 func (r *poolRepo) SaveSlot0(slot0 biz.Slot0) error {
+	if slot0.PoolId == 0 {
+		return errors.BadRequest("INVALID_POOL_ID", "invalid pool id")
+	}
+
 	ctx := context.TODO()
 
 	_, err := dao.Slot0.Ctx(ctx).
@@ -234,4 +238,83 @@ func (r *poolRepo) GetFeeGrowthGlobal(poolId int64,
 		Scan(&feeGrowthGlobal)
 
 	return feeGrowthGlobal.FeeGrowthGlobal0, feeGrowthGlobal.FeeGrowthGlobal1, err
+}
+
+func (r *poolRepo) SaveFeeGrowthGlobal0(poolId int64, feeGrowthGlobal0 decimal.Decimal) error {
+	if feeGrowthGlobal0.IsNegative() {
+		return errors.BadRequest("INVALID_FEE_GROWTH_GLOBAL0", "invalid fee growth global0")
+	}
+
+	ctx := context.TODO()
+
+	_, err := dao.FeeGrowthGlobal.Ctx(ctx).
+		Data(g.Map{
+			dao.FeeGrowthGlobal.Columns().FeeGrowthGlobal0: feeGrowthGlobal0,
+		}).
+		Where(dao.FeeGrowthGlobal.Columns().PoolId, poolId).
+		Update()
+
+	return err
+}
+
+func (r *poolRepo) SaveFeeGrowthGlobal1(poolId int64, feeGrowthGlobal1 decimal.Decimal) error {
+	if feeGrowthGlobal1.IsNegative() {
+		return errors.BadRequest("INVALID_FEE_GROWTH_GLOBAL1", "invalid fee growth global1")
+	}
+
+	ctx := context.TODO()
+
+	_, err := dao.FeeGrowthGlobal.Ctx(ctx).
+		Data(g.Map{
+			dao.FeeGrowthGlobal.Columns().FeeGrowthGlobal1: feeGrowthGlobal1,
+		}).
+		Where(dao.FeeGrowthGlobal.Columns().PoolId, poolId).
+		Update()
+
+	return err
+}
+
+func (r *poolRepo) GetProtocolFee(poolId int64) (token0, token1 decimal.Decimal, err error) {
+	ctx := context.TODO()
+	var protocolFee *entity.ProtocolFee
+
+	err = dao.ProtocolFee.Ctx(ctx).
+		Where(dao.ProtocolFee.Columns().PoolId, poolId).
+		Scan(&protocolFee)
+
+	return protocolFee.Token0Fees, protocolFee.Token1Fees, err
+}
+
+func (r *poolRepo) SaveProtocolFeeToken0(poolId int64, token0 decimal.Decimal) error {
+	if token0.IsNegative() {
+		return errors.BadRequest("INVALID_PROTOCOL_FEE_TOKEN0", "invalid protocol fee token0")
+	}
+
+	ctx := context.TODO()
+
+	_, err := dao.ProtocolFee.Ctx(ctx).
+		Data(g.Map{
+			dao.ProtocolFee.Columns().Token0Fees: token0,
+		}).
+		Where(dao.ProtocolFee.Columns().PoolId, poolId).
+		Update()
+
+	return err
+}
+
+func (r *poolRepo) SaveProtocolFeeToken1(poolId int64, token1 decimal.Decimal) error {
+	if token1.IsNegative() {
+		return errors.BadRequest("INVALID_PROTOCOL_FEE_TOKEN1", "invalid protocol fee token1")
+	}
+
+	ctx := context.TODO()
+
+	_, err := dao.ProtocolFee.Ctx(ctx).
+		Data(g.Map{
+			dao.ProtocolFee.Columns().Token1Fees: token1,
+		}).
+		Where(dao.ProtocolFee.Columns().PoolId, poolId).
+		Update()
+
+	return err
 }

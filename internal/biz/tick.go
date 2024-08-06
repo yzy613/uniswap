@@ -109,3 +109,29 @@ func (uc *TickUsecase) GetFeeGrowthInside(poolId int64,
 func (uc *TickUsecase) Clear(poolId int64, tick int32) error {
 	return uc.repo.Clear(poolId, tick)
 }
+
+func (uc *TickUsecase) Cross(
+	poolId int64,
+	tick int32,
+	feeGrowthGlobal0,
+	feeGrowthGlobal1,
+	secondsPerLiquidityCumulative decimal.Decimal,
+	tickCumulative int64,
+	time uint32,
+) (liquidityNet decimal.Decimal, err error) {
+	info, err := uc.repo.Get(poolId, tick)
+	if err != nil {
+		return
+	}
+
+	info.FeeGrowthOutside0 = feeGrowthGlobal0.Sub(info.FeeGrowthOutside0)
+	info.FeeGrowthOutside1 = feeGrowthGlobal1.Sub(info.FeeGrowthOutside1)
+	info.SecondsPerLiquidityOutside = secondsPerLiquidityCumulative.Sub(info.SecondsPerLiquidityOutside)
+	info.TickCumulativeOutside = decimal.NewFromInt(tickCumulative).Sub(info.TickCumulativeOutside)
+	info.SecondsOutside = decimal.NewFromInt(int64(time)).Sub(info.SecondsOutside)
+	liquidityNet = info.LiquidityNet
+
+	err = uc.repo.Save(info)
+
+	return
+}

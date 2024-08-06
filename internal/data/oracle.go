@@ -2,6 +2,7 @@ package data
 
 import (
 	"context"
+	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/gogf/gf/v2/frame/g"
 	"uniswap/internal/biz"
@@ -44,6 +45,10 @@ func (r *observationRepo) GetObservation(poolId int64, index uint16) (*biz.Obser
 }
 
 func (r *observationRepo) SaveObservation(observation biz.Observation) error {
+	if observation.PoolId == 0 {
+		return errors.BadRequest("INVALID_POOL_ID", "invalid pool id")
+	}
+
 	ctx := context.TODO()
 
 	_, err := dao.Observation.Ctx(ctx).

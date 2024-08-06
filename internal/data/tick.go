@@ -2,6 +2,7 @@ package data
 
 import (
 	"context"
+	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/log"
 	"github.com/gogf/gf/v2/frame/g"
 	"uniswap/internal/biz"
@@ -44,6 +45,10 @@ func (r *tickRepo) Get(poolId int64, tickIndex int32) (*biz.Tick, error) {
 }
 
 func (r *tickRepo) Save(tick *biz.Tick) error {
+	if tick.PoolId == 0 {
+		return errors.BadRequest("INVALID_POOL_ID", "invalid pool id")
+	}
+
 	ctx := context.TODO()
 
 	_, err := dao.Tick.Ctx(ctx).

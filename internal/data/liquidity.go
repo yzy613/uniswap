@@ -2,6 +2,7 @@ package data
 
 import (
 	"context"
+	"github.com/go-kratos/kratos/v2/errors"
 	"github.com/go-kratos/kratos/v2/log"
 	"uniswap/internal/biz"
 	"uniswap/internal/dao"
@@ -40,6 +41,10 @@ func (r *liquidityRepo) GetLiquidity(poolId int64) (*biz.Liquidity, error) {
 }
 
 func (r *liquidityRepo) SaveLiquidity(liquidity biz.Liquidity) error {
+	if liquidity.PoolId == 0 {
+		return errors.BadRequest("INVALID_POOL_ID", "invalid pool id")
+	}
+
 	ctx := context.TODO()
 
 	_, err := dao.Liquidity.Ctx(ctx).
