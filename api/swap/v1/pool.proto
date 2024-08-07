@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package api.swap;
+
+import "google/api/annotations.proto";
+
+option go_package = "uniswap/api/swap;swap";
+option java_multiple_files = true;
+option java_package = "api.swap";
+
+service Pool {
+	rpc CreatePool (CreatePoolRequest) returns (CreatePoolReply) {
+		option (google.api.http) = {
+			post: "/pool";
+			body: "*"
+		};
+	};
+	rpc UpdatePool (UpdatePoolRequest) returns (UpdatePoolReply);
+	rpc DeletePool (DeletePoolRequest) returns (DeletePoolReply);
+	rpc GetPool (GetPoolRequest) returns (GetPoolReply) {
+		option (google.api.http) = {
+			get: "/pool/{token0}/{token1}/{fee}"
+		};
+	};
+	rpc ListPool (ListPoolRequest) returns (ListPoolReply);
+}
+
+message CreatePoolRequest {
+	string token0 = 1;
+	string token1 = 2;
+	uint32 fee = 3;
+}
+message CreatePoolReply {}
+
+message UpdatePoolRequest {}
+message UpdatePoolReply {}
+
+message DeletePoolRequest {}
+message DeletePoolReply {}
+
+message GetPoolRequest {
+	string token0 = 1;
+	string token1 = 2;
+	uint32 fee = 3;
+}
+message GetPoolReply {}
+
+message ListPoolRequest {}
+message ListPoolReply {}

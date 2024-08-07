@@ -55,8 +55,16 @@ type PoolUsecase struct {
 	liquidity   *LiquidityUsecase
 }
 
-func NewPoolUsecase(repo PoolRepo, logger log.Logger, tickUsecase *TickUsecase) *PoolUsecase {
-	return &PoolUsecase{repo: repo, log: log.NewHelper(logger), tick: tickUsecase}
+func NewPoolUsecase(repo PoolRepo, logger log.Logger, tick *TickUsecase,
+	observation *ObservationUsecase, tickBitmap *TickBitmapUsecase, liquidity *LiquidityUsecase) *PoolUsecase {
+	return &PoolUsecase{
+		repo:        repo,
+		log:         log.NewHelper(logger),
+		tick:        tick,
+		observation: observation,
+		tickBitmap:  tickBitmap,
+		liquidity:   liquidity,
+	}
 }
 
 func (uc *PoolUsecase) GetPool(token0, token1 string, fee uint32) (*Pool, error) {

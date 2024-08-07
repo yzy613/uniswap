@@ -1,7 +1,7 @@
 package server
 
 import (
-	v1 "uniswap/api/user/v1"
+	v1 "uniswap/api/swap/v1"
 	"uniswap/internal/conf"
 	"uniswap/internal/service"
 
@@ -11,7 +11,10 @@ import (
 )
 
 // NewHTTPServer new an HTTP server.
-func NewHTTPServer(c *conf.Server, user *service.UserService, logger log.Logger) *http.Server {
+func NewHTTPServer(c *conf.Server, logger log.Logger,
+	swap *service.SwapService,
+	pool *service.PoolService,
+) *http.Server {
 	var opts = []http.ServerOption{
 		http.Middleware(
 			recovery.Recovery(),
@@ -27,6 +30,6 @@ func NewHTTPServer(c *conf.Server, user *service.UserService, logger log.Logger)
 		opts = append(opts, http.Timeout(c.Http.Timeout.AsDuration()))
 	}
 	srv := http.NewServer(opts...)
-	v1.RegisterUserHTTPServer(srv, user)
+	v1.RegisterPoolHTTPServer(srv, pool)
 	return srv
 }

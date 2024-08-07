@@ -20,6 +20,10 @@ type LiquidityUsecase struct {
 	log  *log.Helper
 }
 
+func NewLiquidityUsecase(repo LiquidityRepo, logger log.Logger) *LiquidityUsecase {
+	return &LiquidityUsecase{repo: repo, log: log.NewHelper(logger)}
+}
+
 func (uc *LiquidityUsecase) Get(poolId int64) (decimal.Decimal, error) {
 	l, err := uc.repo.GetLiquidity(poolId)
 	if err != nil {

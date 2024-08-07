@@ -1,0 +1,38 @@
+syntax = "proto3";
+
+package api.swap;
+
+option go_package = "uniswap/api/swap;swap";
+option java_multiple_files = true;
+option java_package = "api.swap";
+
+service Swap {
+  rpc CreateSwap (CreateSwapRequest) returns (CreateSwapReply);
+  rpc UpdateSwap (UpdateSwapRequest) returns (UpdateSwapReply);
+  rpc DeleteSwap (DeleteSwapRequest) returns (DeleteSwapReply);
+  rpc GetSwap (GetSwapRequest) returns (GetSwapReply);
+  rpc ListSwap (ListSwapRequest) returns (ListSwapReply);
+}
+
+message CreateSwapRequest {
+  string token0 = 1;
+  string token1 = 2;
+  uint32 fee = 3;
+  string recipient = 4;
+  bool zeroForOne = 5;
+  string amountSpecified = 6;
+  string priceLimit = 7;
+}
+message CreateSwapReply {}
+
+message UpdateSwapRequest {}
+message UpdateSwapReply {}
+
+message DeleteSwapRequest {}
+message DeleteSwapReply {}
+
+message GetSwapRequest {}
+message GetSwapReply {}
+
+message ListSwapRequest {}
+message ListSwapReply {}

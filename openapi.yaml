@@ -3,19 +3,19 @@
 
 openapi: 3.0.3
 info:
-    title: User API
+    title: Pool API
     version: 0.0.1
 paths:
-    /v1/user:
+    /pool:
         post:
             tags:
-                - User
-            operationId: User_CreateUser
+                - Pool
+            operationId: Pool_CreatePool
             requestBody:
                 content:
                     application/json:
                         schema:
-                            $ref: '#/components/schemas/api.user.v1.CreateUserRequest'
+                            $ref: '#/components/schemas/api.swap.CreatePoolRequest'
                 required: true
             responses:
                 "200":
@@ -23,45 +23,53 @@ paths:
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.user.v1.CreateUserReply'
-    /v1/user/{id}:
+                                $ref: '#/components/schemas/api.swap.CreatePoolReply'
+    /pool/{token0}/{token1}/{fee}:
         get:
             tags:
-                - User
-            operationId: User_GetUser
+                - Pool
+            operationId: Pool_GetPool
             parameters:
-                - name: id
+                - name: token0
                   in: path
                   required: true
                   schema:
                     type: string
+                - name: token1
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+                - name: fee
+                  in: path
+                  required: true
+                  schema:
+                    type: integer
+                    format: uint32
             responses:
                 "200":
                     description: OK
                     content:
                         application/json:
                             schema:
-                                $ref: '#/components/schemas/api.user.v1.GetUserReply'
+                                $ref: '#/components/schemas/api.swap.GetPoolReply'
 components:
     schemas:
-        api.user.v1.CreateUserReply:
+        api.swap.CreatePoolReply:
+            type: object
+            properties: {}
+        api.swap.CreatePoolRequest:
             type: object
             properties:
-                id:
+                token0:
                     type: string
-        api.user.v1.CreateUserRequest:
+                token1:
+                    type: string
+                fee:
+                    type: integer
+                    format: uint32
+        api.swap.GetPoolReply:
             type: object
-            properties:
-                settingJson:
-                    type: string
-        api.user.v1.GetUserReply:
-            type: object
-            properties:
-                settingJson:
-                    type: string
-                createdAt:
-                    type: string
-                updatedAt:
-                    type: string
+            properties: {}
 tags:
-    - name: User
+    - name: Pool

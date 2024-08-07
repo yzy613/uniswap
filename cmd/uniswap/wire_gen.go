@@ -17,6 +17,7 @@ import (
 )
 
 import (
+	_ "github.com/gogf/gf/contrib/drivers/mysql/v2"
 	_ "go.uber.org/automaxprocs"
 )
 
@@ -28,11 +29,20 @@ func wireApp(confServer *conf.Server, confData *conf.Data, logger log.Logger) (*
 	if err != nil {
 		return nil, nil, err
 	}
-	userRepo := data.NewUserRepo(dataData, logger)
-	userUsecase := biz.NewUserUsecase(userRepo, logger)
-	userService := service.NewUserService(userUsecase, logger)
-	grpcServer := server.NewGRPCServer(confServer, userService, logger)
-	httpServer := server.NewHTTPServer(confServer, userService, logger)
+	poolRepo := data.NewPoolRepo(dataData, logger)
+	tickRepo := data.NewTickRepo(dataData, logger)
+	tickUsecase := biz.NewTickUsecase(tickRepo, logger)
+	observationRepo := data.NewObservationRepo(dataData, logger)
+	observationUsecase := biz.NewObservationUsecase(observationRepo, logger)
+	tickBitmapRepo := data.NewTickBitmapRepo(dataData, logger)
+	tickBitmapUsecase := biz.NewTickBitMapUsecase(tickBitmapRepo, logger)
+	liquidityRepo := data.NewLiquidityRepo(dataData, logger)
+	liquidityUsecase := biz.NewLiquidityUsecase(liquidityRepo, logger)
+	poolUsecase := biz.NewPoolUsecase(poolRepo, logger, tickUsecase, observationUsecase, tickBitmapUsecase, liquidityUsecase)
+	swapService := service.NewSwapService(poolUsecase)
+	poolService := service.NewPoolService(poolUsecase)
+	grpcServer := server.NewGRPCServer(confServer, logger, swapService, poolService)
+	httpServer := server.NewHTTPServer(confServer, logger, swapService, poolService)
 	app := newApp(logger, grpcServer, httpServer)
 	return app, func() {
 		cleanup()

@@ -8,14 +8,14 @@ import (
 	"uniswap/internal/conf"
 )
 
-// ProviderSet is data providers.
-var ProviderSet = wire.NewSet(
+// DataProviderSet is data providers.
+var DataProviderSet = wire.NewSet(
 	NewData,
+	NewLiquidityRepo,
+	NewObservationRepo,
 	NewPoolRepo,
 	NewTickRepo,
-	NewObservationRepo,
 	NewTickBitmapRepo,
-	NewLiquidityRepo,
 )
 
 // Data .
