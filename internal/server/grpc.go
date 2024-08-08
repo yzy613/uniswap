@@ -1,7 +1,7 @@
 package server
 
 import (
-	v1 "uniswap/api/swap/v1"
+	v1 "uniswap/api/router/v1"
 	"uniswap/internal/conf"
 	"uniswap/internal/service"
 
@@ -12,8 +12,7 @@ import (
 
 // NewGRPCServer new a gRPC server.
 func NewGRPCServer(c *conf.Server, logger log.Logger,
-	swap *service.SwapService,
-	pool *service.PoolService,
+	router *service.RouterService,
 ) *grpc.Server {
 	var opts = []grpc.ServerOption{
 		grpc.Middleware(
@@ -30,7 +29,6 @@ func NewGRPCServer(c *conf.Server, logger log.Logger,
 		opts = append(opts, grpc.Timeout(c.Grpc.Timeout.AsDuration()))
 	}
 	srv := grpc.NewServer(opts...)
-	v1.RegisterSwapServer(srv, swap)
-	v1.RegisterPoolServer(srv, pool)
+	v1.RegisterRouterServer(srv, router)
 	return srv
 }

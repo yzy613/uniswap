@@ -9,4 +9,5 @@ var BizProviderSet = wire.NewSet(
 	NewPoolUsecase,
 	NewTickUsecase,
 	NewTickBitMapUsecase,
+	NewRouterUsecase,
 )

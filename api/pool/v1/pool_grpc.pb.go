@@ -2,9 +2,9 @@
 // versions:
 // - protoc-gen-go-grpc v1.4.0
 // - protoc             v5.27.1
-// source: swap/v1/pool.proto
+// source: pool/v1/pool.proto
 
-package swap
+package v1
 
 import (
 	context "context"
@@ -19,11 +19,11 @@ import (
 const _ = grpc.SupportPackageIsVersion8
 
 const (
-	Pool_CreatePool_FullMethodName = "/api.swap.Pool/CreatePool"
-	Pool_UpdatePool_FullMethodName = "/api.swap.Pool/UpdatePool"
-	Pool_DeletePool_FullMethodName = "/api.swap.Pool/DeletePool"
-	Pool_GetPool_FullMethodName    = "/api.swap.Pool/GetPool"
-	Pool_ListPool_FullMethodName   = "/api.swap.Pool/ListPool"
+	Pool_CreatePool_FullMethodName = "/api.pool.v1.Pool/CreatePool"
+	Pool_UpdatePool_FullMethodName = "/api.pool.v1.Pool/UpdatePool"
+	Pool_DeletePool_FullMethodName = "/api.pool.v1.Pool/DeletePool"
+	Pool_GetPool_FullMethodName    = "/api.pool.v1.Pool/GetPool"
+	Pool_ListPool_FullMethodName   = "/api.pool.v1.Pool/ListPool"
 )
 
 // PoolClient is the client API for Pool service.
@@ -233,7 +233,7 @@ func _Pool_ListPool_Handler(srv interface{}, ctx context.Context, dec func(inter
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Pool_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "api.swap.Pool",
+	ServiceName: "api.pool.v1.Pool",
 	HandlerType: (*PoolServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -258,5 +258,5 @@ var Pool_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "swap/v1/pool.proto",
+	Metadata: "pool/v1/pool.proto",
 }

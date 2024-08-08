@@ -2,9 +2,9 @@
 // versions:
 // 	protoc-gen-go v1.34.2
 // 	protoc        v5.27.1
-// source: swap/v1/pool.proto
+// source: pool/v1/pool.proto
 
-package swap
+package v1
 
 import (
 	_ "google.golang.org/genproto/googleapis/api/annotations"
@@ -25,16 +25,12 @@ type CreatePoolRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
-
-	Token0 string `protobuf:"bytes,1,opt,name=token0,proto3" json:"token0,omitempty"`
-	Token1 string `protobuf:"bytes,2,opt,name=token1,proto3" json:"token1,omitempty"`
-	Fee    uint32 `protobuf:"varint,3,opt,name=fee,proto3" json:"fee,omitempty"`
 }
 
 func (x *CreatePoolRequest) Reset() {
 	*x = CreatePoolRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_swap_v1_pool_proto_msgTypes[0]
+		mi := &file_pool_v1_pool_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -47,7 +43,7 @@ func (x *CreatePoolRequest) String() string {
 func (*CreatePoolRequest) ProtoMessage() {}
 
 func (x *CreatePoolRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_swap_v1_pool_proto_msgTypes[0]
+	mi := &file_pool_v1_pool_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -60,28 +56,7 @@ func (x *CreatePoolRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreatePoolRequest.ProtoReflect.Descriptor instead.
 func (*CreatePoolRequest) Descriptor() ([]byte, []int) {
-	return file_swap_v1_pool_proto_rawDescGZIP(), []int{0}
-}
-
-func (x *CreatePoolRequest) GetToken0() string {
-	if x != nil {
-		return x.Token0
-	}
-	return ""
-}
-
-func (x *CreatePoolRequest) GetToken1() string {
-	if x != nil {
-		return x.Token1
-	}
-	return ""
-}
-
-func (x *CreatePoolRequest) GetFee() uint32 {
-	if x != nil {
-		return x.Fee
-	}
-	return 0
+	return file_pool_v1_pool_proto_rawDescGZIP(), []int{0}
 }
 
 type CreatePoolReply struct {
@@ -93,7 +68,7 @@ type CreatePoolReply struct {
 func (x *CreatePoolReply) Reset() {
 	*x = CreatePoolReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_swap_v1_pool_proto_msgTypes[1]
+		mi := &file_pool_v1_pool_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -106,7 +81,7 @@ func (x *CreatePoolReply) String() string {
 func (*CreatePoolReply) ProtoMessage() {}
 
 func (x *CreatePoolReply) ProtoReflect() protoreflect.Message {
-	mi := &file_swap_v1_pool_proto_msgTypes[1]
+	mi := &file_pool_v1_pool_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -119,7 +94,7 @@ func (x *CreatePoolReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreatePoolReply.ProtoReflect.Descriptor instead.
 func (*CreatePoolReply) Descriptor() ([]byte, []int) {
-	return file_swap_v1_pool_proto_rawDescGZIP(), []int{1}
+	return file_pool_v1_pool_proto_rawDescGZIP(), []int{1}
 }
 
 type UpdatePoolRequest struct {
@@ -131,7 +106,7 @@ type UpdatePoolRequest struct {
 func (x *UpdatePoolRequest) Reset() {
 	*x = UpdatePoolRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_swap_v1_pool_proto_msgTypes[2]
+		mi := &file_pool_v1_pool_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -144,7 +119,7 @@ func (x *UpdatePoolRequest) String() string {
 func (*UpdatePoolRequest) ProtoMessage() {}
 
 func (x *UpdatePoolRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_swap_v1_pool_proto_msgTypes[2]
+	mi := &file_pool_v1_pool_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -157,7 +132,7 @@ func (x *UpdatePoolRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdatePoolRequest.ProtoReflect.Descriptor instead.
 func (*UpdatePoolRequest) Descriptor() ([]byte, []int) {
-	return file_swap_v1_pool_proto_rawDescGZIP(), []int{2}
+	return file_pool_v1_pool_proto_rawDescGZIP(), []int{2}
 }
 
 type UpdatePoolReply struct {
@@ -169,7 +144,7 @@ type UpdatePoolReply struct {
 func (x *UpdatePoolReply) Reset() {
 	*x = UpdatePoolReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_swap_v1_pool_proto_msgTypes[3]
+		mi := &file_pool_v1_pool_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -182,7 +157,7 @@ func (x *UpdatePoolReply) String() string {
 func (*UpdatePoolReply) ProtoMessage() {}
 
 func (x *UpdatePoolReply) ProtoReflect() protoreflect.Message {
-	mi := &file_swap_v1_pool_proto_msgTypes[3]
+	mi := &file_pool_v1_pool_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -195,7 +170,7 @@ func (x *UpdatePoolReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdatePoolReply.ProtoReflect.Descriptor instead.
 func (*UpdatePoolReply) Descriptor() ([]byte, []int) {
-	return file_swap_v1_pool_proto_rawDescGZIP(), []int{3}
+	return file_pool_v1_pool_proto_rawDescGZIP(), []int{3}
 }
 
 type DeletePoolRequest struct {
@@ -207,7 +182,7 @@ type DeletePoolRequest struct {
 func (x *DeletePoolRequest) Reset() {
 	*x = DeletePoolRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_swap_v1_pool_proto_msgTypes[4]
+		mi := &file_pool_v1_pool_proto_msgTypes[4]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -220,7 +195,7 @@ func (x *DeletePoolRequest) String() string {
 func (*DeletePoolRequest) ProtoMessage() {}
 
 func (x *DeletePoolRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_swap_v1_pool_proto_msgTypes[4]
+	mi := &file_pool_v1_pool_proto_msgTypes[4]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -233,7 +208,7 @@ func (x *DeletePoolRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeletePoolRequest.ProtoReflect.Descriptor instead.
 func (*DeletePoolRequest) Descriptor() ([]byte, []int) {
-	return file_swap_v1_pool_proto_rawDescGZIP(), []int{4}
+	return file_pool_v1_pool_proto_rawDescGZIP(), []int{4}
 }
 
 type DeletePoolReply struct {
@@ -245,7 +220,7 @@ type DeletePoolReply struct {
 func (x *DeletePoolReply) Reset() {
 	*x = DeletePoolReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_swap_v1_pool_proto_msgTypes[5]
+		mi := &file_pool_v1_pool_proto_msgTypes[5]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -258,7 +233,7 @@ func (x *DeletePoolReply) String() string {
 func (*DeletePoolReply) ProtoMessage() {}
 
 func (x *DeletePoolReply) ProtoReflect() protoreflect.Message {
-	mi := &file_swap_v1_pool_proto_msgTypes[5]
+	mi := &file_pool_v1_pool_proto_msgTypes[5]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -271,23 +246,19 @@ func (x *DeletePoolReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeletePoolReply.ProtoReflect.Descriptor instead.
 func (*DeletePoolReply) Descriptor() ([]byte, []int) {
-	return file_swap_v1_pool_proto_rawDescGZIP(), []int{5}
+	return file_pool_v1_pool_proto_rawDescGZIP(), []int{5}
 }
 
 type GetPoolRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
-
-	Token0 string `protobuf:"bytes,1,opt,name=token0,proto3" json:"token0,omitempty"`
-	Token1 string `protobuf:"bytes,2,opt,name=token1,proto3" json:"token1,omitempty"`
-	Fee    uint32 `protobuf:"varint,3,opt,name=fee,proto3" json:"fee,omitempty"`
 }
 
 func (x *GetPoolRequest) Reset() {
 	*x = GetPoolRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_swap_v1_pool_proto_msgTypes[6]
+		mi := &file_pool_v1_pool_proto_msgTypes[6]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -300,7 +271,7 @@ func (x *GetPoolRequest) String() string {
 func (*GetPoolRequest) ProtoMessage() {}
 
 func (x *GetPoolRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_swap_v1_pool_proto_msgTypes[6]
+	mi := &file_pool_v1_pool_proto_msgTypes[6]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -313,28 +284,7 @@ func (x *GetPoolRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetPoolRequest.ProtoReflect.Descriptor instead.
 func (*GetPoolRequest) Descriptor() ([]byte, []int) {
-	return file_swap_v1_pool_proto_rawDescGZIP(), []int{6}
-}
-
-func (x *GetPoolRequest) GetToken0() string {
-	if x != nil {
-		return x.Token0
-	}
-	return ""
-}
-
-func (x *GetPoolRequest) GetToken1() string {
-	if x != nil {
-		return x.Token1
-	}
-	return ""
-}
-
-func (x *GetPoolRequest) GetFee() uint32 {
-	if x != nil {
-		return x.Fee
-	}
-	return 0
+	return file_pool_v1_pool_proto_rawDescGZIP(), []int{6}
 }
 
 type GetPoolReply struct {
@@ -346,7 +296,7 @@ type GetPoolReply struct {
 func (x *GetPoolReply) Reset() {
 	*x = GetPoolReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_swap_v1_pool_proto_msgTypes[7]
+		mi := &file_pool_v1_pool_proto_msgTypes[7]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -359,7 +309,7 @@ func (x *GetPoolReply) String() string {
 func (*GetPoolReply) ProtoMessage() {}
 
 func (x *GetPoolReply) ProtoReflect() protoreflect.Message {
-	mi := &file_swap_v1_pool_proto_msgTypes[7]
+	mi := &file_pool_v1_pool_proto_msgTypes[7]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -372,7 +322,7 @@ func (x *GetPoolReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetPoolReply.ProtoReflect.Descriptor instead.
 func (*GetPoolReply) Descriptor() ([]byte, []int) {
-	return file_swap_v1_pool_proto_rawDescGZIP(), []int{7}
+	return file_pool_v1_pool_proto_rawDescGZIP(), []int{7}
 }
 
 type ListPoolRequest struct {
@@ -384,7 +334,7 @@ type ListPoolRequest struct {
 func (x *ListPoolRequest) Reset() {
 	*x = ListPoolRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_swap_v1_pool_proto_msgTypes[8]
+		mi := &file_pool_v1_pool_proto_msgTypes[8]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -397,7 +347,7 @@ func (x *ListPoolRequest) String() string {
 func (*ListPoolRequest) ProtoMessage() {}
 
 func (x *ListPoolRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_swap_v1_pool_proto_msgTypes[8]
+	mi := &file_pool_v1_pool_proto_msgTypes[8]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -410,7 +360,7 @@ func (x *ListPoolRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListPoolRequest.ProtoReflect.Descriptor instead.
 func (*ListPoolRequest) Descriptor() ([]byte, []int) {
-	return file_swap_v1_pool_proto_rawDescGZIP(), []int{8}
+	return file_pool_v1_pool_proto_rawDescGZIP(), []int{8}
 }
 
 type ListPoolReply struct {
@@ -422,7 +372,7 @@ type ListPoolReply struct {
 func (x *ListPoolReply) Reset() {
 	*x = ListPoolReply{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_swap_v1_pool_proto_msgTypes[9]
+		mi := &file_pool_v1_pool_proto_msgTypes[9]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -435,7 +385,7 @@ func (x *ListPoolReply) String() string {
 func (*ListPoolReply) ProtoMessage() {}
 
 func (x *ListPoolReply) ProtoReflect() protoreflect.Message {
-	mi := &file_swap_v1_pool_proto_msgTypes[9]
+	mi := &file_pool_v1_pool_proto_msgTypes[9]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -448,102 +398,93 @@ func (x *ListPoolReply) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListPoolReply.ProtoReflect.Descriptor instead.
 func (*ListPoolReply) Descriptor() ([]byte, []int) {
-	return file_swap_v1_pool_proto_rawDescGZIP(), []int{9}
+	return file_pool_v1_pool_proto_rawDescGZIP(), []int{9}
 }
 
-var File_swap_v1_pool_proto protoreflect.FileDescriptor
+var File_pool_v1_pool_proto protoreflect.FileDescriptor
 
-var file_swap_v1_pool_proto_rawDesc = []byte{
-	0x0a, 0x12, 0x73, 0x77, 0x61, 0x70, 0x2f, 0x76, 0x31, 0x2f, 0x70, 0x6f, 0x6f, 0x6c, 0x2e, 0x70,
-	0x72, 0x6f, 0x74, 0x6f, 0x12, 0x08, 0x61, 0x70, 0x69, 0x2e, 0x73, 0x77, 0x61, 0x70, 0x1a, 0x1c,
-	0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x61, 0x6e, 0x6e, 0x6f, 0x74,
-	0x61, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0x55, 0x0a, 0x11,
-	0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x50, 0x6f, 0x6f, 0x6c, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
-	0x74, 0x12, 0x16, 0x0a, 0x06, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x30, 0x18, 0x01, 0x20, 0x01, 0x28,
-	0x09, 0x52, 0x06, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x30, 0x12, 0x16, 0x0a, 0x06, 0x74, 0x6f, 0x6b,
-	0x65, 0x6e, 0x31, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x74, 0x6f, 0x6b, 0x65, 0x6e,
-	0x31, 0x12, 0x10, 0x0a, 0x03, 0x66, 0x65, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x03,
-	0x66, 0x65, 0x65, 0x22, 0x11, 0x0a, 0x0f, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x50, 0x6f, 0x6f,
-	0x6c, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x13, 0x0a, 0x11, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65,
-	0x50, 0x6f, 0x6f, 0x6c, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x11, 0x0a, 0x0f, 0x55,
-	0x70, 0x64, 0x61, 0x74, 0x65, 0x50, 0x6f, 0x6f, 0x6c, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x13,
-	0x0a, 0x11, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x50, 0x6f, 0x6f, 0x6c, 0x52, 0x65, 0x71, 0x75,
-	0x65, 0x73, 0x74, 0x22, 0x11, 0x0a, 0x0f, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x50, 0x6f, 0x6f,
-	0x6c, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x52, 0x0a, 0x0e, 0x47, 0x65, 0x74, 0x50, 0x6f, 0x6f,
-	0x6c, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x16, 0x0a, 0x06, 0x74, 0x6f, 0x6b, 0x65,
-	0x6e, 0x30, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x06, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x30,
-	0x12, 0x16, 0x0a, 0x06, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x31, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09,
-	0x52, 0x06, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x31, 0x12, 0x10, 0x0a, 0x03, 0x66, 0x65, 0x65, 0x18,
-	0x03, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x03, 0x66, 0x65, 0x65, 0x22, 0x0e, 0x0a, 0x0c, 0x47, 0x65,
-	0x74, 0x50, 0x6f, 0x6f, 0x6c, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x11, 0x0a, 0x0f, 0x4c, 0x69,
-	0x73, 0x74, 0x50, 0x6f, 0x6f, 0x6c, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x0f, 0x0a,
-	0x0d, 0x4c, 0x69, 0x73, 0x74, 0x50, 0x6f, 0x6f, 0x6c, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x32, 0x8e,
-	0x03, 0x0a, 0x04, 0x50, 0x6f, 0x6f, 0x6c, 0x12, 0x56, 0x0a, 0x0a, 0x43, 0x72, 0x65, 0x61, 0x74,
-	0x65, 0x50, 0x6f, 0x6f, 0x6c, 0x12, 0x1b, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x73, 0x77, 0x61, 0x70,
-	0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x50, 0x6f, 0x6f, 0x6c, 0x52, 0x65, 0x71, 0x75, 0x65,
-	0x73, 0x74, 0x1a, 0x19, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x73, 0x77, 0x61, 0x70, 0x2e, 0x43, 0x72,
-	0x65, 0x61, 0x74, 0x65, 0x50, 0x6f, 0x6f, 0x6c, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x10, 0x82,
-	0xd3, 0xe4, 0x93, 0x02, 0x0a, 0x3a, 0x01, 0x2a, 0x22, 0x05, 0x2f, 0x70, 0x6f, 0x6f, 0x6c, 0x12,
-	0x44, 0x0a, 0x0a, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x50, 0x6f, 0x6f, 0x6c, 0x12, 0x1b, 0x2e,
-	0x61, 0x70, 0x69, 0x2e, 0x73, 0x77, 0x61, 0x70, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x50,
-	0x6f, 0x6f, 0x6c, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x19, 0x2e, 0x61, 0x70, 0x69,
-	0x2e, 0x73, 0x77, 0x61, 0x70, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x50, 0x6f, 0x6f, 0x6c,
-	0x52, 0x65, 0x70, 0x6c, 0x79, 0x12, 0x44, 0x0a, 0x0a, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x50,
-	0x6f, 0x6f, 0x6c, 0x12, 0x1b, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x73, 0x77, 0x61, 0x70, 0x2e, 0x44,
-	0x65, 0x6c, 0x65, 0x74, 0x65, 0x50, 0x6f, 0x6f, 0x6c, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
-	0x1a, 0x19, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x73, 0x77, 0x61, 0x70, 0x2e, 0x44, 0x65, 0x6c, 0x65,
-	0x74, 0x65, 0x50, 0x6f, 0x6f, 0x6c, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x12, 0x62, 0x0a, 0x07, 0x47,
-	0x65, 0x74, 0x50, 0x6f, 0x6f, 0x6c, 0x12, 0x18, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x73, 0x77, 0x61,
-	0x70, 0x2e, 0x47, 0x65, 0x74, 0x50, 0x6f, 0x6f, 0x6c, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
-	0x1a, 0x16, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x73, 0x77, 0x61, 0x70, 0x2e, 0x47, 0x65, 0x74, 0x50,
-	0x6f, 0x6f, 0x6c, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x25, 0x82, 0xd3, 0xe4, 0x93, 0x02, 0x1f,
-	0x12, 0x1d, 0x2f, 0x70, 0x6f, 0x6f, 0x6c, 0x2f, 0x7b, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x30, 0x7d,
-	0x2f, 0x7b, 0x74, 0x6f, 0x6b, 0x65, 0x6e, 0x31, 0x7d, 0x2f, 0x7b, 0x66, 0x65, 0x65, 0x7d, 0x12,
-	0x3e, 0x0a, 0x08, 0x4c, 0x69, 0x73, 0x74, 0x50, 0x6f, 0x6f, 0x6c, 0x12, 0x19, 0x2e, 0x61, 0x70,
-	0x69, 0x2e, 0x73, 0x77, 0x61, 0x70, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x50, 0x6f, 0x6f, 0x6c, 0x52,
-	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x17, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x73, 0x77, 0x61,
-	0x70, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x50, 0x6f, 0x6f, 0x6c, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x42,
-	0x23, 0x0a, 0x08, 0x61, 0x70, 0x69, 0x2e, 0x73, 0x77, 0x61, 0x70, 0x50, 0x01, 0x5a, 0x15, 0x75,
-	0x6e, 0x69, 0x73, 0x77, 0x61, 0x70, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x73, 0x77, 0x61, 0x70, 0x3b,
-	0x73, 0x77, 0x61, 0x70, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+var file_pool_v1_pool_proto_rawDesc = []byte{
+	0x0a, 0x12, 0x70, 0x6f, 0x6f, 0x6c, 0x2f, 0x76, 0x31, 0x2f, 0x70, 0x6f, 0x6f, 0x6c, 0x2e, 0x70,
+	0x72, 0x6f, 0x74, 0x6f, 0x12, 0x0b, 0x61, 0x70, 0x69, 0x2e, 0x70, 0x6f, 0x6f, 0x6c, 0x2e, 0x76,
+	0x31, 0x1a, 0x1c, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2f, 0x61, 0x70, 0x69, 0x2f, 0x61, 0x6e,
+	0x6e, 0x6f, 0x74, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22,
+	0x13, 0x0a, 0x11, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x50, 0x6f, 0x6f, 0x6c, 0x52, 0x65, 0x71,
+	0x75, 0x65, 0x73, 0x74, 0x22, 0x11, 0x0a, 0x0f, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x50, 0x6f,
+	0x6f, 0x6c, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x13, 0x0a, 0x11, 0x55, 0x70, 0x64, 0x61, 0x74,
+	0x65, 0x50, 0x6f, 0x6f, 0x6c, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x11, 0x0a, 0x0f,
+	0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x50, 0x6f, 0x6f, 0x6c, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22,
+	0x13, 0x0a, 0x11, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x50, 0x6f, 0x6f, 0x6c, 0x52, 0x65, 0x71,
+	0x75, 0x65, 0x73, 0x74, 0x22, 0x11, 0x0a, 0x0f, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x50, 0x6f,
+	0x6f, 0x6c, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x10, 0x0a, 0x0e, 0x47, 0x65, 0x74, 0x50, 0x6f,
+	0x6f, 0x6c, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x0e, 0x0a, 0x0c, 0x47, 0x65, 0x74,
+	0x50, 0x6f, 0x6f, 0x6c, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x22, 0x11, 0x0a, 0x0f, 0x4c, 0x69, 0x73,
+	0x74, 0x50, 0x6f, 0x6f, 0x6c, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x0f, 0x0a, 0x0d,
+	0x4c, 0x69, 0x73, 0x74, 0x50, 0x6f, 0x6f, 0x6c, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x32, 0xf3, 0x02,
+	0x0a, 0x04, 0x50, 0x6f, 0x6f, 0x6c, 0x12, 0x4a, 0x0a, 0x0a, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65,
+	0x50, 0x6f, 0x6f, 0x6c, 0x12, 0x1e, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x70, 0x6f, 0x6f, 0x6c, 0x2e,
+	0x76, 0x31, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x50, 0x6f, 0x6f, 0x6c, 0x52, 0x65, 0x71,
+	0x75, 0x65, 0x73, 0x74, 0x1a, 0x1c, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x70, 0x6f, 0x6f, 0x6c, 0x2e,
+	0x76, 0x31, 0x2e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x50, 0x6f, 0x6f, 0x6c, 0x52, 0x65, 0x70,
+	0x6c, 0x79, 0x12, 0x4a, 0x0a, 0x0a, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x50, 0x6f, 0x6f, 0x6c,
+	0x12, 0x1e, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x70, 0x6f, 0x6f, 0x6c, 0x2e, 0x76, 0x31, 0x2e, 0x55,
+	0x70, 0x64, 0x61, 0x74, 0x65, 0x50, 0x6f, 0x6f, 0x6c, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
+	0x1a, 0x1c, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x70, 0x6f, 0x6f, 0x6c, 0x2e, 0x76, 0x31, 0x2e, 0x55,
+	0x70, 0x64, 0x61, 0x74, 0x65, 0x50, 0x6f, 0x6f, 0x6c, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x12, 0x4a,
+	0x0a, 0x0a, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x50, 0x6f, 0x6f, 0x6c, 0x12, 0x1e, 0x2e, 0x61,
+	0x70, 0x69, 0x2e, 0x70, 0x6f, 0x6f, 0x6c, 0x2e, 0x76, 0x31, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74,
+	0x65, 0x50, 0x6f, 0x6f, 0x6c, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1c, 0x2e, 0x61,
+	0x70, 0x69, 0x2e, 0x70, 0x6f, 0x6f, 0x6c, 0x2e, 0x76, 0x31, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74,
+	0x65, 0x50, 0x6f, 0x6f, 0x6c, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x12, 0x41, 0x0a, 0x07, 0x47, 0x65,
+	0x74, 0x50, 0x6f, 0x6f, 0x6c, 0x12, 0x1b, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x70, 0x6f, 0x6f, 0x6c,
+	0x2e, 0x76, 0x31, 0x2e, 0x47, 0x65, 0x74, 0x50, 0x6f, 0x6f, 0x6c, 0x52, 0x65, 0x71, 0x75, 0x65,
+	0x73, 0x74, 0x1a, 0x19, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x70, 0x6f, 0x6f, 0x6c, 0x2e, 0x76, 0x31,
+	0x2e, 0x47, 0x65, 0x74, 0x50, 0x6f, 0x6f, 0x6c, 0x52, 0x65, 0x70, 0x6c, 0x79, 0x12, 0x44, 0x0a,
+	0x08, 0x4c, 0x69, 0x73, 0x74, 0x50, 0x6f, 0x6f, 0x6c, 0x12, 0x1c, 0x2e, 0x61, 0x70, 0x69, 0x2e,
+	0x70, 0x6f, 0x6f, 0x6c, 0x2e, 0x76, 0x31, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x50, 0x6f, 0x6f, 0x6c,
+	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x1a, 0x2e, 0x61, 0x70, 0x69, 0x2e, 0x70, 0x6f,
+	0x6f, 0x6c, 0x2e, 0x76, 0x31, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x50, 0x6f, 0x6f, 0x6c, 0x52, 0x65,
+	0x70, 0x6c, 0x79, 0x42, 0x27, 0x0a, 0x0b, 0x61, 0x70, 0x69, 0x2e, 0x70, 0x6f, 0x6f, 0x6c, 0x2e,
+	0x76, 0x31, 0x50, 0x01, 0x5a, 0x16, 0x75, 0x6e, 0x69, 0x73, 0x77, 0x61, 0x70, 0x2f, 0x61, 0x70,
+	0x69, 0x2f, 0x70, 0x6f, 0x6f, 0x6c, 0x2f, 0x76, 0x31, 0x3b, 0x76, 0x31, 0x62, 0x06, 0x70, 0x72,
+	0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
-	file_swap_v1_pool_proto_rawDescOnce sync.Once
-	file_swap_v1_pool_proto_rawDescData = file_swap_v1_pool_proto_rawDesc
+	file_pool_v1_pool_proto_rawDescOnce sync.Once
+	file_pool_v1_pool_proto_rawDescData = file_pool_v1_pool_proto_rawDesc
 )
 
-func file_swap_v1_pool_proto_rawDescGZIP() []byte {
-	file_swap_v1_pool_proto_rawDescOnce.Do(func() {
-		file_swap_v1_pool_proto_rawDescData = protoimpl.X.CompressGZIP(file_swap_v1_pool_proto_rawDescData)
+func file_pool_v1_pool_proto_rawDescGZIP() []byte {
+	file_pool_v1_pool_proto_rawDescOnce.Do(func() {
+		file_pool_v1_pool_proto_rawDescData = protoimpl.X.CompressGZIP(file_pool_v1_pool_proto_rawDescData)
 	})
-	return file_swap_v1_pool_proto_rawDescData
+	return file_pool_v1_pool_proto_rawDescData
 }
 
-var file_swap_v1_pool_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
-var file_swap_v1_pool_proto_goTypes = []any{
-	(*CreatePoolRequest)(nil), // 0: api.swap.CreatePoolRequest
-	(*CreatePoolReply)(nil),   // 1: api.swap.CreatePoolReply
-	(*UpdatePoolRequest)(nil), // 2: api.swap.UpdatePoolRequest
-	(*UpdatePoolReply)(nil),   // 3: api.swap.UpdatePoolReply
-	(*DeletePoolRequest)(nil), // 4: api.swap.DeletePoolRequest
-	(*DeletePoolReply)(nil),   // 5: api.swap.DeletePoolReply
-	(*GetPoolRequest)(nil),    // 6: api.swap.GetPoolRequest
-	(*GetPoolReply)(nil),      // 7: api.swap.GetPoolReply
-	(*ListPoolRequest)(nil),   // 8: api.swap.ListPoolRequest
-	(*ListPoolReply)(nil),     // 9: api.swap.ListPoolReply
+var file_pool_v1_pool_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
+var file_pool_v1_pool_proto_goTypes = []any{
+	(*CreatePoolRequest)(nil), // 0: api.pool.v1.CreatePoolRequest
+	(*CreatePoolReply)(nil),   // 1: api.pool.v1.CreatePoolReply
+	(*UpdatePoolRequest)(nil), // 2: api.pool.v1.UpdatePoolRequest
+	(*UpdatePoolReply)(nil),   // 3: api.pool.v1.UpdatePoolReply
+	(*DeletePoolRequest)(nil), // 4: api.pool.v1.DeletePoolRequest
+	(*DeletePoolReply)(nil),   // 5: api.pool.v1.DeletePoolReply
+	(*GetPoolRequest)(nil),    // 6: api.pool.v1.GetPoolRequest
+	(*GetPoolReply)(nil),      // 7: api.pool.v1.GetPoolReply
+	(*ListPoolRequest)(nil),   // 8: api.pool.v1.ListPoolRequest
+	(*ListPoolReply)(nil),     // 9: api.pool.v1.ListPoolReply
 }
-var file_swap_v1_pool_proto_depIdxs = []int32{
-	0, // 0: api.swap.Pool.CreatePool:input_type -> api.swap.CreatePoolRequest
-	2, // 1: api.swap.Pool.UpdatePool:input_type -> api.swap.UpdatePoolRequest
-	4, // 2: api.swap.Pool.DeletePool:input_type -> api.swap.DeletePoolRequest
-	6, // 3: api.swap.Pool.GetPool:input_type -> api.swap.GetPoolRequest
-	8, // 4: api.swap.Pool.ListPool:input_type -> api.swap.ListPoolRequest
-	1, // 5: api.swap.Pool.CreatePool:output_type -> api.swap.CreatePoolReply
-	3, // 6: api.swap.Pool.UpdatePool:output_type -> api.swap.UpdatePoolReply
-	5, // 7: api.swap.Pool.DeletePool:output_type -> api.swap.DeletePoolReply
-	7, // 8: api.swap.Pool.GetPool:output_type -> api.swap.GetPoolReply
-	9, // 9: api.swap.Pool.ListPool:output_type -> api.swap.ListPoolReply
+var file_pool_v1_pool_proto_depIdxs = []int32{
+	0, // 0: api.pool.v1.Pool.CreatePool:input_type -> api.pool.v1.CreatePoolRequest
+	2, // 1: api.pool.v1.Pool.UpdatePool:input_type -> api.pool.v1.UpdatePoolRequest
+	4, // 2: api.pool.v1.Pool.DeletePool:input_type -> api.pool.v1.DeletePoolRequest
+	6, // 3: api.pool.v1.Pool.GetPool:input_type -> api.pool.v1.GetPoolRequest
+	8, // 4: api.pool.v1.Pool.ListPool:input_type -> api.pool.v1.ListPoolRequest
+	1, // 5: api.pool.v1.Pool.CreatePool:output_type -> api.pool.v1.CreatePoolReply
+	3, // 6: api.pool.v1.Pool.UpdatePool:output_type -> api.pool.v1.UpdatePoolReply
+	5, // 7: api.pool.v1.Pool.DeletePool:output_type -> api.pool.v1.DeletePoolReply
+	7, // 8: api.pool.v1.Pool.GetPool:output_type -> api.pool.v1.GetPoolReply
+	9, // 9: api.pool.v1.Pool.ListPool:output_type -> api.pool.v1.ListPoolReply
 	5, // [5:10] is the sub-list for method output_type
 	0, // [0:5] is the sub-list for method input_type
 	0, // [0:0] is the sub-list for extension type_name
@@ -551,13 +492,13 @@ var file_swap_v1_pool_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for field type_name
 }
 
-func init() { file_swap_v1_pool_proto_init() }
-func file_swap_v1_pool_proto_init() {
-	if File_swap_v1_pool_proto != nil {
+func init() { file_pool_v1_pool_proto_init() }
+func file_pool_v1_pool_proto_init() {
+	if File_pool_v1_pool_proto != nil {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_swap_v1_pool_proto_msgTypes[0].Exporter = func(v any, i int) any {
+		file_pool_v1_pool_proto_msgTypes[0].Exporter = func(v any, i int) any {
 			switch v := v.(*CreatePoolRequest); i {
 			case 0:
 				return &v.state
@@ -569,7 +510,7 @@ func file_swap_v1_pool_proto_init() {
 				return nil
 			}
 		}
-		file_swap_v1_pool_proto_msgTypes[1].Exporter = func(v any, i int) any {
+		file_pool_v1_pool_proto_msgTypes[1].Exporter = func(v any, i int) any {
 			switch v := v.(*CreatePoolReply); i {
 			case 0:
 				return &v.state
@@ -581,7 +522,7 @@ func file_swap_v1_pool_proto_init() {
 				return nil
 			}
 		}
-		file_swap_v1_pool_proto_msgTypes[2].Exporter = func(v any, i int) any {
+		file_pool_v1_pool_proto_msgTypes[2].Exporter = func(v any, i int) any {
 			switch v := v.(*UpdatePoolRequest); i {
 			case 0:
 				return &v.state
@@ -593,7 +534,7 @@ func file_swap_v1_pool_proto_init() {
 				return nil
 			}
 		}
-		file_swap_v1_pool_proto_msgTypes[3].Exporter = func(v any, i int) any {
+		file_pool_v1_pool_proto_msgTypes[3].Exporter = func(v any, i int) any {
 			switch v := v.(*UpdatePoolReply); i {
 			case 0:
 				return &v.state
@@ -605,7 +546,7 @@ func file_swap_v1_pool_proto_init() {
 				return nil
 			}
 		}
-		file_swap_v1_pool_proto_msgTypes[4].Exporter = func(v any, i int) any {
+		file_pool_v1_pool_proto_msgTypes[4].Exporter = func(v any, i int) any {
 			switch v := v.(*DeletePoolRequest); i {
 			case 0:
 				return &v.state
@@ -617,7 +558,7 @@ func file_swap_v1_pool_proto_init() {
 				return nil
 			}
 		}
-		file_swap_v1_pool_proto_msgTypes[5].Exporter = func(v any, i int) any {
+		file_pool_v1_pool_proto_msgTypes[5].Exporter = func(v any, i int) any {
 			switch v := v.(*DeletePoolReply); i {
 			case 0:
 				return &v.state
@@ -629,7 +570,7 @@ func file_swap_v1_pool_proto_init() {
 				return nil
 			}
 		}
-		file_swap_v1_pool_proto_msgTypes[6].Exporter = func(v any, i int) any {
+		file_pool_v1_pool_proto_msgTypes[6].Exporter = func(v any, i int) any {
 			switch v := v.(*GetPoolRequest); i {
 			case 0:
 				return &v.state
@@ -641,7 +582,7 @@ func file_swap_v1_pool_proto_init() {
 				return nil
 			}
 		}
-		file_swap_v1_pool_proto_msgTypes[7].Exporter = func(v any, i int) any {
+		file_pool_v1_pool_proto_msgTypes[7].Exporter = func(v any, i int) any {
 			switch v := v.(*GetPoolReply); i {
 			case 0:
 				return &v.state
@@ -653,7 +594,7 @@ func file_swap_v1_pool_proto_init() {
 				return nil
 			}
 		}
-		file_swap_v1_pool_proto_msgTypes[8].Exporter = func(v any, i int) any {
+		file_pool_v1_pool_proto_msgTypes[8].Exporter = func(v any, i int) any {
 			switch v := v.(*ListPoolRequest); i {
 			case 0:
 				return &v.state
@@ -665,7 +606,7 @@ func file_swap_v1_pool_proto_init() {
 				return nil
 			}
 		}
-		file_swap_v1_pool_proto_msgTypes[9].Exporter = func(v any, i int) any {
+		file_pool_v1_pool_proto_msgTypes[9].Exporter = func(v any, i int) any {
 			switch v := v.(*ListPoolReply); i {
 			case 0:
 				return &v.state
@@ -682,18 +623,18 @@ func file_swap_v1_pool_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: file_swap_v1_pool_proto_rawDesc,
+			RawDescriptor: file_pool_v1_pool_proto_rawDesc,
 			NumEnums:      0,
 			NumMessages:   10,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_swap_v1_pool_proto_goTypes,
-		DependencyIndexes: file_swap_v1_pool_proto_depIdxs,
-		MessageInfos:      file_swap_v1_pool_proto_msgTypes,
+		GoTypes:           file_pool_v1_pool_proto_goTypes,
+		DependencyIndexes: file_pool_v1_pool_proto_depIdxs,
+		MessageInfos:      file_pool_v1_pool_proto_msgTypes,
 	}.Build()
-	File_swap_v1_pool_proto = out.File
-	file_swap_v1_pool_proto_rawDesc = nil
-	file_swap_v1_pool_proto_goTypes = nil
-	file_swap_v1_pool_proto_depIdxs = nil
+	File_pool_v1_pool_proto = out.File
+	file_pool_v1_pool_proto_rawDesc = nil
+	file_pool_v1_pool_proto_goTypes = nil
+	file_pool_v1_pool_proto_depIdxs = nil
 }

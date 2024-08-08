@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+package api.router.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "uniswap/api/router/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.router.v1";
+
+service Router {
+	rpc exactInputSingle (ExactInputSingleRequest) returns (ExactInputSingleReply) {
+		option (google.api.http) = {
+			post: "/router/exactInputSingle";
+			body: "*"
+		};
+	};
+	rpc exactOutputSingle (ExactOutputSingleRequest) returns (ExactOutputSingleReply) {
+		option (google.api.http) = {
+			post: "/router/exactOutputSingle";
+			body: "*"
+		};
+	};
+}
+
+message ExactInputSingleRequest {
+	string tokenIn = 1;
+	string tokenOut = 2;
+	uint32 fee = 3;
+	string recipient = 4;
+	string deadline = 5;
+	string amountIn = 6;
+	string amountOutMinimum = 7;
+	string priceLimit = 8;
+}
+message ExactInputSingleReply {
+	string amountOut = 1;
+}
+
+message ExactOutputSingleRequest {
+	string tokenIn = 1;
+	string tokenOut = 2;
+	uint32 fee = 3;
+	string recipient = 4;
+	string deadline = 5;
+	string amountOut = 6;
+	string amountInMaximum = 7;
+	string priceLimit = 8;
+}
+message ExactOutputSingleReply {
+	string amountIn = 1;
+}

@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package api.pool.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "uniswap/api/pool/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.pool.v1";
+
+service Pool {
+	rpc CreatePool (CreatePoolRequest) returns (CreatePoolReply);
+	rpc UpdatePool (UpdatePoolRequest) returns (UpdatePoolReply);
+	rpc DeletePool (DeletePoolRequest) returns (DeletePoolReply);
+	rpc GetPool (GetPoolRequest) returns (GetPoolReply);
+	rpc ListPool (ListPoolRequest) returns (ListPoolReply);
+}
+
+message CreatePoolRequest {}
+message CreatePoolReply {}
+
+message UpdatePoolRequest {}
+message UpdatePoolReply {}
+
+message DeletePoolRequest {}
+message DeletePoolReply {}
+
+message GetPoolRequest {}
+message GetPoolReply {}
+
+message ListPoolRequest {}
+message ListPoolReply {}

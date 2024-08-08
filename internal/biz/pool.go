@@ -349,7 +349,12 @@ func (uc *PoolUsecase) updatePosition(pool Pool, owner string, tickLower, tickUp
 }
 
 func (uc *PoolUsecase) Swap(
-	pool Pool, recipient string, zeroForOne bool, amountSpecified, priceLimit decimal.Decimal,
+	pool Pool,
+	recipient string,
+	zeroForOne bool,
+	amountSpecified,
+	priceLimit decimal.Decimal,
+	data SwapCallbackData,
 ) (amount0, amount1 decimal.Decimal, err error) {
 	if amountSpecified.IsZero() {
 		return decimal.Decimal{}, decimal.Decimal{},
@@ -638,5 +643,18 @@ func (uc *PoolUsecase) Swap(
 	}
 
 	// TODO: do the transfers and collect payment
+	//if (zeroForOne) {
+	//	if (amount1 < 0) TransferHelper.safeTransfer(token1, recipient, uint256(-amount1));
+	//
+	//	uint256 balance0Before = balance0();
+	//	IUniswapV3SwapCallback(msg.sender).uniswapV3SwapCallback(amount0, amount1, data);
+	//	require(balance0Before.add(uint256(amount0)) <= balance0(), 'IIA');
+	//} else {
+	//	if (amount0 < 0) TransferHelper.safeTransfer(token0, recipient, uint256(-amount0));
+	//
+	//	uint256 balance1Before = balance1();
+	//	IUniswapV3SwapCallback(msg.sender).uniswapV3SwapCallback(amount0, amount1, data);
+	//	require(balance1Before.add(uint256(amount1)) <= balance1(), 'IIA');
+	//}
 	return
 }
