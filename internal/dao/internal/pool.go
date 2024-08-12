@@ -26,6 +26,8 @@ type PoolColumns struct {
 	Fee                 string //
 	TickSpacing         string //
 	MaxLiquidityPerTick string //
+	Balance0            string //
+	Balance1            string //
 }
 
 // poolColumns holds the columns for table pool.
@@ -36,6 +38,8 @@ var poolColumns = PoolColumns{
 	Fee:                 "fee",
 	TickSpacing:         "tick_spacing",
 	MaxLiquidityPerTick: "max_liquidity_per_tick",
+	Balance0:            "balance0",
+	Balance1:            "balance1",
 }
 
 // NewPoolDao creates and returns a new DAO object for table data access.

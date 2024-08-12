@@ -147,6 +147,22 @@ func (r *poolRepo) UpdatePosition(position biz.Position,
 	return err
 }
 
+func (r *poolRepo) SavePosition(position biz.Position) error {
+	ctx := context.TODO()
+
+	_, err := dao.Position.Ctx(ctx).
+		Data(position.Position).OmitEmptyData().
+		OnConflict(
+			dao.Position.Columns().PoolId,
+			dao.Position.Columns().OwnerAddress,
+			dao.Position.Columns().TickLower,
+			dao.Position.Columns().TickUpper,
+		).
+		Save()
+
+	return err
+}
+
 func (r *poolRepo) GetSlot0(poolId int64) (*biz.Slot0, error) {
 	ctx := context.TODO()
 	var slot0 *entity.Slot0
@@ -314,6 +330,32 @@ func (r *poolRepo) SaveProtocolFeeToken1(poolId int64, token1 decimal.Decimal) e
 			dao.ProtocolFee.Columns().Token1Fees: token1,
 		}).
 		Where(dao.ProtocolFee.Columns().PoolId, poolId).
+		Update()
+
+	return err
+}
+
+func (r *poolRepo) GetBalance(poolId int64) (balance0, balance1 decimal.Decimal, err error) {
+	ctx := context.TODO()
+	var pool *entity.Pool
+
+	err = dao.Pool.Ctx(ctx).
+		Fields(dao.Pool.Columns().Balance0, dao.Pool.Columns().Balance1).
+		Where(dao.Pool.Columns().Id, poolId).
+		Scan(&pool)
+
+	return pool.Balance0, pool.Balance1, err
+}
+
+func (r *poolRepo) SetBalance(poolId int64, balance0, balance1 decimal.Decimal) error {
+	ctx := context.TODO()
+
+	_, err := dao.Pool.Ctx(ctx).
+		Data(g.Map{
+			dao.Pool.Columns().Balance0: balance0,
+			dao.Pool.Columns().Balance1: balance1,
+		}).
+		Where(dao.Pool.Columns().Id, poolId).
 		Update()
 
 	return err

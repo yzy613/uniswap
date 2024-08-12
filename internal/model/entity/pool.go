@@ -16,4 +16,6 @@ type Pool struct {
 	Fee                 int             `json:"fee"                    orm:"fee"                    ` //
 	TickSpacing         int             `json:"tick_spacing"           orm:"tick_spacing"           ` //
 	MaxLiquidityPerTick decimal.Decimal `json:"max_liquidity_per_tick" orm:"max_liquidity_per_tick" ` //
+	Balance0            decimal.Decimal `json:"balance_0"              orm:"balance0"               ` //
+	Balance1            decimal.Decimal `json:"balance_1"              orm:"balance1"               ` //
 }

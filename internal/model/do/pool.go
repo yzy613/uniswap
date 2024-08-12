@@ -17,4 +17,6 @@ type Pool struct {
 	Fee                 interface{} //
 	TickSpacing         interface{} //
 	MaxLiquidityPerTick interface{} //
+	Balance0            interface{} //
+	Balance1            interface{} //
 }

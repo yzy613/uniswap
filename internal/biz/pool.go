@@ -33,6 +33,7 @@ type PoolRepo interface {
 	GetPosition(poolId int64, owner string, tickLower, tickUpper int32) (*Position, error)
 	UpdatePosition(position Position,
 		liquidityDelta, feeGrowthInside0, feeGrowthInside1 decimal.Decimal) error
+	SavePosition(position Position) error
 	GetSlot0(poolId int64) (*Slot0, error)
 	SaveSlot0(slot0 Slot0) error
 	TryLockSlot0(poolId int64) error
@@ -43,6 +44,8 @@ type PoolRepo interface {
 	GetProtocolFee(poolId int64) (token0, token1 decimal.Decimal, err error)
 	SaveProtocolFeeToken0(poolId int64, token0 decimal.Decimal) error
 	SaveProtocolFeeToken1(poolId int64, token1 decimal.Decimal) error
+	GetBalance(poolId int64) (balance0, balance1 decimal.Decimal, err error)
+	SetBalance(poolId int64, balance0, balance1 decimal.Decimal) error
 }
 
 type PoolUsecase struct {
@@ -143,10 +146,107 @@ func (uc *PoolUsecase) checkTick(tickLower, tickUpper int32) error {
 	return nil
 }
 
-func (uc *PoolUsecase) Mint(pool Pool, tickLower, tickUpper int32, amount decimal.Decimal,
+func (uc *PoolUsecase) Mint(poolId int64, recipient string, tickLower, tickUpper int32, amount decimal.Decimal,
 ) (amount0, amount1 decimal.Decimal, err error) {
-	// TODO: Mint
-	return decimal.Zero, decimal.Zero, nil
+	err = uc.repo.TryLockSlot0(poolId)
+	if err != nil {
+		return decimal.Decimal{}, decimal.Decimal{}, err
+	}
+	defer uc.repo.UnlockSlot0(poolId)
+
+	if amount.LessThanOrEqual(decimal.Zero) {
+		return decimal.Decimal{}, decimal.Decimal{},
+			errors.BadRequest("INVALID_AMOUNT", "amount is invalid")
+	}
+
+	_, amount0, amount1, err = uc.modifyPosition(
+		poolId,
+		recipient,
+		tickLower,
+		tickUpper,
+		amount,
+	)
+	if err != nil {
+		return decimal.Decimal{}, decimal.Decimal{}, err
+	}
+
+	var balance0Before, balance1Before decimal.Decimal
+	{
+		b0, b1, err := uc.repo.GetBalance(poolId)
+		if err != nil {
+			return decimal.Decimal{}, decimal.Decimal{}, err
+		}
+
+		if amount0.GreaterThan(decimal.Zero) {
+			balance0Before = b0
+		}
+		if amount1.GreaterThan(decimal.Zero) {
+			balance1Before = b1
+		}
+	}
+
+	err = uc.repo.SetBalance(poolId, balance0Before.Add(amount0), balance1Before.Add(amount1))
+	if err != nil {
+		return decimal.Decimal{}, decimal.Decimal{}, err
+	}
+
+	return
+}
+
+func (uc *PoolUsecase) Collect(
+	poolId int64,
+	recipient string,
+	tickLower,
+	tickUpper int32,
+	amount0Requested,
+	amount1Requested decimal.Decimal,
+) (amount0, amount1 decimal.Decimal, err error) {
+	err = uc.repo.TryLockSlot0(poolId)
+	if err != nil {
+		return decimal.Decimal{}, decimal.Decimal{}, err
+	}
+	defer uc.repo.UnlockSlot0(poolId)
+
+	position, err := uc.repo.GetPosition(poolId, "msg.sender", tickLower, tickUpper)
+	if err != nil {
+		return
+	}
+
+	if amount0Requested.GreaterThan(position.TokensOwed0) {
+		amount0 = position.TokensOwed0
+	} else {
+		amount0 = amount0Requested
+	}
+	if amount1Requested.GreaterThan(position.TokensOwed1) {
+		amount1 = position.TokensOwed1
+	} else {
+		amount1 = amount1Requested
+	}
+
+	if amount0.GreaterThan(decimal.Zero) {
+		position.TokensOwed0 = position.TokensOwed0.Sub(amount0)
+		// transfer token0 to recipient
+	}
+	if amount1.GreaterThan(decimal.Zero) {
+		position.TokensOwed1 = position.TokensOwed1.Sub(amount1)
+		// transfer token1 to recipient
+	}
+
+	err = uc.repo.SavePosition(*position)
+
+	return
+}
+
+func (uc *PoolUsecase) Burn(poolId int64, tickLower, tickUpper int32, amount decimal.Decimal,
+) (amount0, amount1 decimal.Decimal, err error) {
+	err = uc.repo.TryLockSlot0(poolId)
+	if err != nil {
+		return decimal.Decimal{}, decimal.Decimal{}, err
+	}
+	defer uc.repo.UnlockSlot0(poolId)
+
+	// TODO: Burn
+	return
 }
 
 func (uc *PoolUsecase) modifyPosition(poolId int64, owner string, tickLower, tickUpper int32, liquidityDelta decimal.Decimal,
