@@ -245,7 +245,27 @@ func (uc *PoolUsecase) Burn(poolId int64, tickLower, tickUpper int32, amount dec
 	}
 	defer uc.repo.UnlockSlot0(poolId)
 
-	// TODO: Burn
+	position, amount0, amount1, err := uc.modifyPosition(
+		poolId,
+		"msg.sender",
+		tickLower,
+		tickUpper,
+		amount.Neg(),
+	)
+	if err != nil {
+		return decimal.Decimal{}, decimal.Decimal{}, err
+	}
+
+	amount0 = amount0.Neg()
+	amount1 = amount1.Neg()
+
+	if amount0.GreaterThan(decimal.Zero) || amount1.GreaterThan(decimal.Zero) {
+		position.TokensOwed0 = position.TokensOwed0.Add(amount0)
+		position.TokensOwed1 = position.TokensOwed1.Add(amount1)
+	}
+
+	err = uc.repo.SavePosition(*position)
+
 	return
 }
 
